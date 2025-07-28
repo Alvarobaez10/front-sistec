@@ -1,0 +1,7 @@
+{
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript"],
+  "eslint.options": {
+    "configFile": "eslint.custom.config.mjs"
+  }
+}
