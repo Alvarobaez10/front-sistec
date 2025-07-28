@@ -43,7 +43,7 @@ export default function Login() {
       const res = await setLogin(user, password);
       setItem('infoUser', JSON.stringify(res), 'local');
       loggedIn();
-      router.push('/inicio');
+      router.push('/gestion');
     } catch (error) {
       offLoad();
       toast.error('Usuario / Contraseña no válidos');

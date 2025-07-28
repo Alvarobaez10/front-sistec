@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import '../styles/globals.css';
+import '../styles/icons.css';
 import { NAME_APP } from '../config/env';
 import { AppProvider } from '@sistec/context/AppContext';
 import DivLoading from '@sistec/components/common/DivLoading';
@@ -24,6 +25,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AppProvider>
+          <div
+            id="confirmBackdrop"
+            className={`fixed h-screen w-screen bg-black/50 z-50 hidden`}
+          ></div>
           <DivLoading />
           {children}
         </AppProvider>

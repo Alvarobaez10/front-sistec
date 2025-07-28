@@ -4,6 +4,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import validateSession from '@sistec/services/login/validateSession';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import setLogOut from '@sistec/services/login/setLogOut';
+import useStorage from '@sistec/hooks/useStorage';
 
 const appContext = createContext();
 
@@ -18,6 +20,7 @@ const listForms = [{ id_form: '1', label: 'prueba', url: '/SAI/land/prueba' }];
 export function AppProvider({ children }) {
   const router = useRouter();
   let pathname = usePathname();
+  const { removeItem } = useStorage();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [loadedForms, setLoadedForms] = useState([]);
@@ -58,16 +61,13 @@ export function AppProvider({ children }) {
 
   async function logOut() {
     try {
-      const response = await validateSession();
-      // await setLogOut(response.access_token, response.refresh_token);
+      await setLogOut();
+      setIsLogged(false);
+      removeItem('info-user', 'local');
+      returnLogin();
     } catch (error) {
       console.log(error);
     }
-    setUserData(null);
-    setIsLogged(false);
-    removeItem('refresh-token', 'local');
-    removeItem('info-user', 'local');
-    returnLogin();
   }
 
   const offLoad = () => {
@@ -99,6 +99,7 @@ export function AppProvider({ children }) {
         loggedIn,
         returnLogin,
         getToken,
+        logOut,
       }}
     >
       <ToastContainer />

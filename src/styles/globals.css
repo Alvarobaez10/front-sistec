@@ -29,9 +29,19 @@ section.main-view {
     "sidebar main";
 
   & header.section-header {
+    padding: 5px 15px;
+    display: grid;
     grid-area: header;
-    background: var(--bg-header);
+    align-items: center;
     box-shadow: 0px 0px 10px rgb(0 0 0 / 25%);
+    grid-template-columns: 120px 1fr 1fr;
+    & div.div-info-session{
+      display: flex;
+      flex-direction: row;
+      justify-content: end;
+      align-items: center;
+      gap: 5px;
+    }
   }
 
   & aside.section-menu {

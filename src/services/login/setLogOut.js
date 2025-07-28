@@ -1,13 +1,10 @@
+import { URL_API_SISTEC_PUBLIC } from "@sistec/config/env";
 import requestApi from "../requestApi";
 
-export default async function setLogOut(token, refreshToken) {
+export default async function setLogOut() {
   const config = {
-    method: "post",
-    url: `${process.env.NEXT_PUBLIC_URL_API_AUTH}login`,
-    data: {
-      token: token,
-      refreshToken: refreshToken,
-    },
+    method: 'post',
+    url: `${URL_API_SISTEC_PUBLIC}logout`,
   };
   return requestApi(config);
 }
