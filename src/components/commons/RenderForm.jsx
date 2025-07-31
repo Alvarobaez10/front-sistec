@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
-import { set } from "lodash";
 import { useEffect } from "react";
+import { set } from "lodash";
 import { validateRulesForm } from "@sistec/helpers/formElements/validateRules";
 
 const FormElementComponent = dynamic(() => import("./FormElementComponent"), {
@@ -8,7 +8,6 @@ const FormElementComponent = dynamic(() => import("./FormElementComponent"), {
 });
 
 function ListElements(props) {
-  const typeOptions = ["select", "radio", "group"];
   const {
     valueMap,
     setValue,
@@ -20,6 +19,7 @@ function ListElements(props) {
     ...others
   } = props;
 
+  const typeOptions = ["select", "radio", "group"];
   const html = [];
 
   for (const key in fields) {
@@ -34,7 +34,7 @@ function ListElements(props) {
     switch (element.type) {
       case "subForm":
         html.push(
-          <div className="w-full mb-4" key={key}>
+          <div key={key} className="w-full mb-4">
             <RenderForm
               fields={element.fields}
               options={options}
@@ -52,7 +52,7 @@ function ListElements(props) {
 
       default:
         html.push(
-          <div className="mb-4" key={key}>
+          <div key={key} className="mb-4">
             <FormElementComponent
               element={element}
               setValue={setValue}
@@ -85,6 +85,7 @@ export default function RenderForm(props) {
   const setValue = (id, value) => {
     const newValueMap = { ...datosForm };
     set(newValueMap, id, value);
+
     const validatedData = validateRulesForm(
       fields,
       origin,
@@ -92,6 +93,7 @@ export default function RenderForm(props) {
       setConfig,
       options
     );
+
     setDatosForm(validatedData, origin);
   };
 
@@ -103,6 +105,7 @@ export default function RenderForm(props) {
       setConfig,
       options
     );
+
     setDatosForm(validatedData, origin);
   }, []);
 

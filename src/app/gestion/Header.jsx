@@ -32,7 +32,8 @@ export default function Header() {
 
   return (
     <header className="section-header">
-      <Image src={''} alt="MapGIS Land" className="brand-image" />
+    <Image src={''} alt="MapGIS Land" className="brand-image" />
+
       <div>
         <h1 className="text-2xl font-bold text-md">SAC - Sistema de asociaciones y compradores</h1>
         <a className="ayuda-app">Ayuda del sistema</a>

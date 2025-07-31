@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import GroupInput from "./GroupInput";
 import { getValueSelect } from "@sistec/helpers/utils";
 import { getValueMoney } from "@sistec/helpers/formatMoney";
-import Ubicacion from "./components-ubicacion/Ubicacion";
 
 export default function FormElementComponent(props) {
   var parent = window.parent;
@@ -16,13 +15,7 @@ export default function FormElementComponent(props) {
     classDivCol,
     ...others
   } = props;
-  const [jsonConfigUbicacion, setJsonConfigUbicacion] = useState(
-    JSON.parse(
-      parent.getParametro
-        ? parent.getParametro("jsonConfigUbicacion")
-        : parent.parent.getParametro("jsonConfigUbicacion"),
-    ),
-  );
+
 
   const getCurrentValue = (event) => {
     let type = element.type;
@@ -51,9 +44,6 @@ export default function FormElementComponent(props) {
     }
   };
 
-  function setUbicacion(dataUbicacion) {
-    setDatosForm(dataUbicacion, id);
-  }
 
   useEffect(() => {
     let intentos = 0;

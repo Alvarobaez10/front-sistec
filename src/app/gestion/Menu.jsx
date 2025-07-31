@@ -1,24 +1,42 @@
+'use client';
+
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Menu() {
+  const router = useRouter();
+
+  const handleNavigate = (ruta) => {
+    router.push(ruta);
+  };
+
   return (
     <aside className="section-menu">
       <nav>
         <ul className="space-y-2">
           <li>
-            <a href="./inicio" className="block p-2 hover:bg-green-200 rounded">
+            <button
+              onClick={() => handleNavigate('/gestion/formulario')}
+              className="block w-full text-left p-2 hover:bg-green-200 rounded"
+            >
               Inicio
-            </a>
+            </button>
           </li>
           <li>
-            <a href="perfil" className="block p-2 hover:bg-green-200 rounded">
+            <button
+              onClick={() => handleNavigate('/perfil')}
+              className="block w-full text-left p-2 hover:bg-green-200 rounded"
+            >
               Perfil
-            </a>
+            </button>
           </li>
           <li>
-            <a href="configuracion" className="block p-2 hover:bg-green-200 rounded">
+            <button
+              onClick={() => handleNavigate('/configuracion')}
+              className="block w-full text-left p-2 hover:bg-green-200 rounded"
+            >
               Configuración
-            </a>
+            </button>
           </li>
         </ul>
       </nav>

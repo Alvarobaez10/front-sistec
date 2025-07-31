@@ -3,7 +3,6 @@
 import { useApp } from '@sistec/context/AppContext';
 import useStorage from '@sistec/hooks/useStorage';
 import setLogin from '@sistec/services/login/setLogin';
-import validateSession from '@sistec/services/login/validateSession';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
