@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import GroupInput from "./GroupInput";
 import { getValueSelect } from "@sistec/helpers/utils";
 import { getValueMoney } from "@sistec/helpers/formatMoney";
+// import Ubicacion from "../commons/components-ubicacion/Ubicacion";
 
 export default function FormElementComponent(props) {
-  var parent = window.parent;
+  let parent = window.parent;
 
   const {
     element,
@@ -16,21 +17,36 @@ export default function FormElementComponent(props) {
     ...others
   } = props;
 
+  const [jsonConfigUbicacion, setJsonConfigUbicacion] = useState(
+    JSON.parse(
+      parent.getParametro
+        ? parent.getParametro("jsonConfigUbicacion")
+        : parent.parent?.getParametro?.("jsonConfigUbicacion") || "{}"
+    )
+  );
+
+  useEffect(() => {
+    let intentos = 0;
+    while (intentos < 3 && !parent?.deleteGraphics) {
+      parent = parent?.parent;
+      intentos++;
+    }
+  }, []);
 
   const getCurrentValue = (event) => {
     let type = element.type;
     let mode = element?.mode;
+
     if (type === "group") {
       const idField = event.target ? event.target.id : event?.field;
       const fieldElement = element.fields[idField];
       type = fieldElement.type;
       mode = fieldElement.mode;
     }
+
     switch (type) {
       case "radio":
-        return event.target.value;
       case "checkbox":
-        return event.target.checked;
       case "switch":
         return event.target.checked;
       case "select":
@@ -44,16 +60,9 @@ export default function FormElementComponent(props) {
     }
   };
 
-
-  useEffect(() => {
-    let intentos = 0;
-    while (intentos < 3 && !parent.deleteGraphics) {
-      if (!parent.deleteGraphics) {
-        parent = parent.parent;
-      }
-      intentos++;
-    }
-  }, []);
+  const setUbicacion = (dataUbicacion) => {
+    setDatosForm(dataUbicacion, id);
+  };
 
   const handleChange = (event) => {
     const value = getCurrentValue(event);
@@ -89,22 +98,22 @@ export default function FormElementComponent(props) {
         style={{ marginTop: "10px" }}
       />
     );
-  } else {
-    return (
-      <div
-        key={id}
-        className={`mt-2 flex items-center ${classDivCol ?? ""}`}
-        style={!show ? { display: "none" } : {}}
-      >
-        <GroupInput
-          {...element}
-          id={id}
-          setValue={setValue}
-          {...others}
-          onChange={handleChange}
-          name={id}
-        />
-      </div>
-    );
   }
+
+  return (
+    <div
+      key={id}
+      className={`mt-2 flex items-center ${classDivCol ?? ""}`}
+      style={!show ? { display: "none" } : {}}
+    >
+      <GroupInput
+        {...element}
+        id={id}
+        setValue={setValue}
+        {...others}
+        onChange={handleChange}
+        name={id}
+      />
+    </div>
+  );
 }

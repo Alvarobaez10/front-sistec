@@ -13,7 +13,7 @@ export default function Formulario({ config }) {
 
     
     return (
-        <div className="p-4">
+         <div className={`p-4 ${config?.parentContainerClass ?? ""}`}>
             <RenderForm
                 key={"form-informacion_general" + keyForm}
                 fields={config?.informacion_general}

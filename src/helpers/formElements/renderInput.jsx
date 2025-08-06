@@ -19,7 +19,7 @@ function renderInput(config, className = "", value, type, valueMap) {
     }
   }
 
-  disabled = disabled ? disabled : isDisabled;
+  disabled = disabled || isDisabled;
 
   const handlerOnInput = (event) => {
     if (
@@ -39,7 +39,12 @@ function renderInput(config, className = "", value, type, valueMap) {
   return (
     <input
       key={key}
-      className={`w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${className}`}
+      className={`
+        w-full border border-gray-300 rounded px-2 py-1 text-sm 
+        focus:outline-none focus:ring-1 focus:ring-blue-500 
+        disabled:bg-gray-100 disabled:cursor-not-allowed 
+        ${className}
+      `}
       {...otherConfig}
       disabled={disabled}
       autoComplete="off"

@@ -31,10 +31,12 @@ function ListElements(props) {
       }
     }
 
+    const classContainer = element.classContainer || "col-span-12";
+
     switch (element.type) {
       case "subForm":
         html.push(
-          <div key={key} className="w-full mb-4">
+          <div key={key} className="col-span-12">
             <RenderForm
               fields={element.fields}
               options={options}
@@ -52,7 +54,7 @@ function ListElements(props) {
 
       default:
         html.push(
-          <div key={key} className="mb-4">
+          <div key={key} className={`${classContainer} flex flex-col`}>
             <FormElementComponent
               element={element}
               setValue={setValue}
@@ -68,7 +70,7 @@ function ListElements(props) {
     }
   }
 
-  return html;
+  return <>{html}</>;
 }
 
 export default function RenderForm(props) {
@@ -79,6 +81,7 @@ export default function RenderForm(props) {
     setDatosForm,
     datosForm,
     origin,
+    config,
     ...others
   } = props;
 
@@ -109,8 +112,11 @@ export default function RenderForm(props) {
     setDatosForm(validatedData, origin);
   }, []);
 
+  const parentClass =
+    config?.parentContainerClass || "grid grid-cols-12 gap-4";
+
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className={`w-full ${parentClass}`}>
       <ListElements
         valueMap={datosForm}
         setValue={setValue}
