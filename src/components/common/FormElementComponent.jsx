@@ -1,27 +1,19 @@
-import { useEffect, useState } from "react";
-import GroupInput from "./GroupInput";
-import { getValueSelect } from "@sistec/helpers/utils";
-import { getValueMoney } from "@sistec/helpers/formatMoney";
+import { useEffect, useState } from 'react';
+import GroupInput from './GroupInput';
+import { getValueSelect } from '@sistec/helpers/utils';
+import { getValueMoney } from '@sistec/helpers/formatMoney';
 // import Ubicacion from "../commons/components-ubicacion/Ubicacion";
 
 export default function FormElementComponent(props) {
   let parent = window.parent;
 
-  const {
-    element,
-    setValue,
-    id,
-    setDatosForm,
-    datosForm,
-    classDivCol,
-    ...others
-  } = props;
+  const { element, setValue, id, setDatosForm, datosForm, classContainer, ...others } = props;
 
   const [jsonConfigUbicacion, setJsonConfigUbicacion] = useState(
     JSON.parse(
       parent.getParametro
-        ? parent.getParametro("jsonConfigUbicacion")
-        : parent.parent?.getParametro?.("jsonConfigUbicacion") || "{}"
+        ? parent.getParametro('jsonConfigUbicacion')
+        : parent.parent?.getParametro?.('jsonConfigUbicacion') || '{}'
     )
   );
 
@@ -37,7 +29,7 @@ export default function FormElementComponent(props) {
     let type = element.type;
     let mode = element?.mode;
 
-    if (type === "group") {
+    if (type === 'group') {
       const idField = event.target ? event.target.id : event?.field;
       const fieldElement = element.fields[idField];
       type = fieldElement.type;
@@ -45,15 +37,15 @@ export default function FormElementComponent(props) {
     }
 
     switch (type) {
-      case "radio":
-      case "checkbox":
-      case "switch":
+      case 'radio':
+      case 'checkbox':
+      case 'switch':
         return event.target.checked;
-      case "select":
+      case 'select':
         return getValueSelect(event, mode);
-      case "money":
+      case 'money':
         return getValueMoney(event);
-      case "input-range":
+      case 'input-range':
         return event;
       default:
         return event.target.value;
@@ -68,12 +60,12 @@ export default function FormElementComponent(props) {
     const value = getCurrentValue(event);
 
     switch (element.type) {
-      case "group":
+      case 'group':
         const idField = event.target ? event.target.id : event?.field;
         setValue(idField, value);
         break;
 
-      case "input-range":
+      case 'input-range':
         const valorFinal = {
           min: value.min < element.minValue ? element.minValue : value.min,
           max: value.max > element.maxValue ? element.maxValue : value.max,
@@ -89,31 +81,25 @@ export default function FormElementComponent(props) {
 
   const show = element.show !== undefined ? element.show : true;
 
-  if (element.type === "ubicacion") {
+  if (element.type === 'ubicacion') {
     return (
       <Ubicacion
         config={jsonConfigUbicacion}
         data={datosForm}
         setUbicacion={setUbicacion}
-        style={{ marginTop: "10px" }}
+        style={{ marginTop: '10px' }}
       />
     );
   }
 
   return (
-    <div
-      key={id}
-      className={`mt-2 flex items-center ${classDivCol ?? ""}`}
-      style={!show ? { display: "none" } : {}}
-    >
-      <GroupInput
-        {...element}
-        id={id}
-        setValue={setValue}
-        {...others}
-        onChange={handleChange}
-        name={id}
-      />
-    </div>
+    <GroupInput
+      {...element}
+      id={id}
+      setValue={setValue}
+      {...others}
+      onChange={handleChange}
+      name={id}
+    />
   );
 }

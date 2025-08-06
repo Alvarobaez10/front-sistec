@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { defaultColDef, textGrid } from "@sistec/helpers/grid/UtilsGrid";
 import configGrid from "@sistec/helpers/configGrid";
-import Pagination from "@sistec/components/commons/paginationComponent/Pagination";
+import Pagination from "@sistec/components/common/paginationComponent/Pagination";
 
 /**
  * @typedef {Object} propsTable
