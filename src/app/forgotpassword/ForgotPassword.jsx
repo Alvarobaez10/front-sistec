@@ -1,53 +1,60 @@
 'use client';
-
 import { useApp } from '@sistec/context/AppContext';
-import useStorage from '@sistec/hooks/useStorage';
-import setLogin from '@sistec/services/login/setLogin';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-export default function Login() {
-  const { onLoad, offLoad, loggedIn } = useApp();
-  const { setItem } = useStorage();
+export default function ForgotPassword() {
+  const { onLoad, offLoad } = useApp();
   const router = useRouter();
-  const [user, setUser] = useState('admin-sac');
-  const [password, setPassword] = useState('12345*');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  useEffect(() => {
-    offLoad();
-  }, []);
+   useEffect(() => {
+     offLoad();
+   }, []);
 
   const handleSubmit = async (e) => {
     e.stopPropagation();
     e.preventDefault();
+    
     let mensaje = '';
-    if (user === '' || user === null) {
-      mensaje = 'Ingrese el usuario';
-    } else if (password === '' || password === null) {
-      mensaje = 'Ingrese la contraseña';
+    if (newPassword === '' || newPassword === null) {
+      mensaje = 'Ingrese la nueva contraseña';
+    } else if (confirmPassword === '' || confirmPassword === null) {
+      mensaje = 'Confirme la nueva contraseña';
+    } else if (newPassword !== confirmPassword) {
+      mensaje = 'Las contraseñas no coinciden';
+    } else if (newPassword.length < 6) {
+      mensaje = 'La contraseña debe tener al menos 6 caracteres';
     }
 
     if (mensaje !== '') {
       toast.warning(mensaje);
       return;
     } else {
-      validateUser();
+      updatePassword();
     }
   };
 
-  async function validateUser() {
+  async function updatePassword() {
     try {
       onLoad();
-      const res = await setLogin(user, password);
-      setItem('infoUser', JSON.stringify(res), 'local');
-      loggedIn();
-      router.push('/gestion');
+      setTimeout(() => {
+        offLoad();
+        toast.success('Contraseña actualizada correctamente');
+        router.push('/login');
+      }, 2000);
+      
     } catch (error) {
       offLoad();
-      toast.error('Usuario / Contraseña no válidos');
+      toast.error('Error al actualizar la contraseña');
     }
   }
+
+  const handleBackToLogin = () => {
+    router.push('/login');
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
@@ -65,23 +72,23 @@ export default function Login() {
               <div className="text-white text-center p-8">
                 <div className="w-24 h-24 mx-auto mb-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                   <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m0 0v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2m6 0V7a2 2 0 00-2-2H9a2 2 0 00-2 2v0m6 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2m0 0h6" />
                   </svg>
                 </div>
-                <h1 className="text-2xl font-bold mb-2">Sistema de Gestión</h1>
-                <p className="text-lg opacity-90">Plataforma Industrial</p>
+                <h1 className="text-2xl font-bold mb-2">Recuperación Segura</h1>
+                <p className="text-lg opacity-90">Restablece tu Acceso</p>
                 <div className="mt-8 space-y-2 text-sm opacity-80">
                   <div className="flex items-center justify-center space-x-2">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
-                    <span>Gestión de Procesos</span>
+                    <span>Proceso Seguro</span>
                   </div>
                   <div className="flex items-center justify-center space-x-2">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
-                    <span>Control de Calidad</span>
+                    <span>Encriptación Avanzada</span>
                   </div>
                   <div className="flex items-center justify-center space-x-2">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
-                    <span>Reportes en Tiempo Real</span>
+                    <span>Acceso Inmediato</span>
                   </div>
                 </div>
               </div>
@@ -96,67 +103,79 @@ export default function Login() {
             <div className="text-center mb-8">
               <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
                 <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m0 0v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2m6 0V7a2 2 0 00-2-2H9a2 2 0 00-2 2v0m6 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2m0 0h6" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Iniciar Sesión</h2>
-              <p className="text-gray-600 text-sm">Ingresa con tus datos para acceder al portal de inscripción</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Recuperar Contraseña</h2>
+              <p className="text-gray-600 text-sm">Ingresa tu nueva contraseña para restablecer tu acceso</p>
             </div>
 
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña</label>
                 <input
-                  type="text"
+                  type="password"
                   required
-                  value={user}
-                  placeholder="john.doe@gmail.com"
-                  onChange={(e) => setUser(e.target.value)}
+                  value={newPassword}
+                  placeholder="••••••••••••"
+                  onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Repetir Contraseña</label>
                 <input
                   type="password"
                   required
                   placeholder="••••••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <label className="flex items-center">
-                  <input type="checkbox" className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" />
-                  <span className="ml-2 text-sm text-gray-600">Recordar contraseña</span>
-                </label>
-                <button 
-                  type="button"
-                  onClick={() => router.push('/forgotpassword')}
-                  className="text-sm text-green-600 hover:text-green-800 font-medium"
-                >
-                  ¿Olvidaste tu contraseña?
-                </button>
+              {/* Indicadores de seguridad */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-xs text-gray-600 mb-2 font-medium">Requisitos de la contraseña:</p>
+                <div className="space-y-1 text-xs">
+                  <div className={`flex items-center space-x-2 ${newPassword.length >= 6 ? 'text-green-600' : 'text-gray-400'}`}>
+                    <div className={`w-2 h-2 rounded-full ${newPassword.length >= 6 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span>Mínimo 6 caracteres</span>
+                  </div>
+                  <div className={`flex items-center space-x-2 ${newPassword === confirmPassword && newPassword !== '' ? 'text-green-600' : 'text-gray-400'}`}>
+                    <div className={`w-2 h-2 rounded-full ${newPassword === confirmPassword && newPassword !== '' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span>Las contraseñas coinciden</span>
+                  </div>
+                </div>
               </div>
 
               <button
                 type="submit"
-                disabled={!user || !password}
+                disabled={!newPassword || !confirmPassword}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                Iniciar Sesión
+                Cambiar Contraseña
               </button>
             </form>
 
+            {/* Volver al login */}
+            <div className="mt-6 text-center">
+              <button 
+                onClick={handleBackToLogin}
+                className="text-sm text-green-600 hover:text-green-800 font-medium flex items-center justify-center space-x-1 mx-auto"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Volver al inicio de sesión</span>
+              </button>
+            </div>
             {/* Footer del formulario */}
             <div className="mt-6 text-center">
               <p className="text-xs text-gray-500">
-                Al iniciar sesión, aceptas nuestros{' '}
-                <a href="#" className="text-green-600 hover:underline">términos y condiciones</a>
+                Tu información está protegida con encriptación de nivel empresarial
               </p>
             </div>
           </div>

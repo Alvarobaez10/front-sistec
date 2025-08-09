@@ -30,7 +30,9 @@ export function AppProvider({ children }) {
       return window.location.pathname;
     }
   };
-  let [isLogged, setIsLogged] = useState(validateActive() === '/login');
+  const publicRoutes = ['/login', '/forgotpassword'];
+  const isPublicRoute = publicRoutes.includes(pathname);
+  const [isLogged, setIsLogged] = useState(false);
 
   useLayoutEffect(() => {
     const url = pathname + searchParams.toString();
@@ -40,6 +42,8 @@ export function AppProvider({ children }) {
   }, [pathname, searchParams]);
 
   useLayoutEffect(() => {
+      if (isPublicRoute) return; 
+
     async function validate() {
       try {
         await validateSession();
@@ -49,7 +53,7 @@ export function AppProvider({ children }) {
       }
     }
     validate().then();
-  }, []);
+  }, [isPublicRoute]);
 
   const loggedIn = () => {
     setIsLogged(true);
@@ -103,7 +107,7 @@ export function AppProvider({ children }) {
       }}
     >
       <ToastContainer />
-      {isLogged ? children : <></>}
+      {(isPublicRoute || isLogged) ? children : <></>}
     </appContext.Provider>
   );
 }
