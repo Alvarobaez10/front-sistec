@@ -59,3 +59,7 @@ section.main-view {
     padding: 10px;
   }
 }
+
+.select-autocomplete__control {
+  border-radius: 25px !important;
+}

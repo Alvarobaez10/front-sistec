@@ -2,7 +2,6 @@ import get from 'lodash/get';
 import { AutoComplete } from 'primereact/autocomplete';
 import 'primereact/resources/primereact.css';
 import 'primeicons/primeicons.css';
-import InputRange from 'react-input-range';
 import renderSelect from '@sistec/helpers/formElements/renderSelect';
 import renderRadio from '@sistec/helpers/formElements/renderRadio';
 import renderHtmlGroup from '@sistec/helpers/formElements/renderHtmlGroup';
@@ -116,32 +115,27 @@ function GroupInput({
       break;
     case 'input-range':
       html = (
-        <InputRange
-          formatLabel={(value) => {
-            let valorFormato = value;
-            if (formatLabel) {
-              switch (formatLabel) {
-                case '%':
-                  valorFormato = `${value}${formatLabel}`;
-                  break;
-                case '$':
-                  valorFormato = Number(value).toLocaleString('es-CO', {
-                    style: 'currency',
-                    currency: 'COP',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  });
-                  break;
-                default:
-                  valorFormato = value;
-                  break;
-              }
-            }
-            return valorFormato;
-          }}
-          {...config}
-          value={value}
-        />
+        <div className="flex flex-col gap-1">
+          <input
+            type="range"
+            className={`w-full ${className}`}
+            {...config}
+            value={value}
+            onChange={(e) => setValue?.(e.target.value)}
+          />
+          <span className="text-sm text-gray-600">
+            {formatLabel === '%'
+              ? `${value}%`
+              : formatLabel === '$'
+                ? Number(value).toLocaleString('es-CO', {
+                  style: 'currency',
+                  currency: 'COP',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })
+                : value}
+          </span>
+        </div>
       );
       break;
     case 'file':
@@ -161,9 +155,8 @@ function GroupInput({
   const titleFormInput = title ? (
     <label
       htmlFor={id}
-      className={`${isFieldDisabled ? 'opacity-50' : ''} ${
-        required && showMultiLine ? 'font-semibold' : ''
-      }`}
+      className={`${isFieldDisabled ? 'opacity-50' : ''} ${required && showMultiLine ? 'font-semibold' : ''
+        }`}
       {...(showMultiLine ? propTitle : {})}
     >
       {showMultiLine ? (

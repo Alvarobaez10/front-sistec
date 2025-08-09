@@ -40,7 +40,7 @@ function renderInput(config, className = "", value, type, valueMap) {
     <input
       key={key}
       className={`
-        w-full border border-gray-300 rounded px-2 py-1 text-sm 
+        w-full border border-gray-300 rounded-[25px] px-2 py-1 text-sm 
         focus:outline-none focus:ring-1 focus:ring-blue-500 
         disabled:bg-gray-100 disabled:cursor-not-allowed 
         ${className}
