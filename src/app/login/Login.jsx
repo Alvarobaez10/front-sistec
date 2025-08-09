@@ -36,18 +36,19 @@ export default function Login() {
     }
   };
 
-  async function validateUser() {
-    try {
-      onLoad();
-      const res = await setLogin(user, password);
-      setItem('infoUser', JSON.stringify(res), 'local');
-      loggedIn();
-      router.push('/gestion');
-    } catch (error) {
-      offLoad();
-      toast.error('Usuario / Contraseña no válidos');
-    }
+async function validateUser() {
+  try {
+    onLoad();
+    const res = await setLogin(user, password);
+    setItem('infoUser', JSON.stringify(res), 'local');
+    loggedIn();
+    router.push('/gestion');
+  } catch (error) {
+    toast.error('Usuario / Contraseña no válidos');
+  } finally {
+    offLoad();
   }
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
