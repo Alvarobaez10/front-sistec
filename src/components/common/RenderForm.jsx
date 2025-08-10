@@ -15,6 +15,7 @@ function ListElements(props) {
 
   for (const key in fields) {
     const element = fields[key];
+    const uniqueKey = origin ? `${origin}-${key}` : key;  
 
     if (typeOptions.includes(element.type)) {
       if (!element.options || element.options.length === 0) {
@@ -27,7 +28,7 @@ function ListElements(props) {
     switch (element.type) {
       case 'subForm':
         html.push(
-          <div key={key}>
+          <div key={uniqueKey}>
             <RenderForm
               fields={element.fields}
               options={options}
@@ -46,6 +47,7 @@ function ListElements(props) {
       default:
         html.push(
           <FormElementComponent
+            key={uniqueKey}  
             element={element}
             setValue={setValue}
             id={key}
@@ -86,7 +88,6 @@ export default function RenderForm(props) {
 
   useEffect(() => {
     const validatedData = validateRulesForm(fields, origin, datosForm, setConfig, options);
-
     setDatosForm(validatedData, origin);
   }, []);
 

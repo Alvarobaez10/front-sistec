@@ -32,19 +32,24 @@ export default function Header() {
 
   return (
     <header className="section-header">
-    <Image src={''} alt="MapGIS Land" className="brand-image" />
-
+      <Image src={'/logo.png'} alt="SAC Logo" className="brand-image" width={100} height={40} />
+      
       <div>
-        <h1 className="text-2xl font-bold text-md">SAC - Sistema de asociaciones y compradores</h1>
-        <a className="ayuda-app">Ayuda del sistema</a>
+        <h1 className="text-xl font-semibold">SAC - Sistema de asociaciones y compradores</h1>
+        <a className="ayuda-app" href="#ayuda">Ayuda del sistema</a>
       </div>
+      
       <div className="div-info-session">
         <div className="info-session">
           <label>
             {infoUser.nombre ?? ''} {infoUser.apellido ?? ''}
           </label>
         </div>
-        <span className="icon-logout" onClick={() => validateLogout()}></span>
+        <span 
+          className="icon-logout" 
+          onClick={() => validateLogout()}
+          title="Cerrar sesión"
+        ></span>
       </div>
     </header>
   );
