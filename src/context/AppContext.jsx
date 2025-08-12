@@ -51,6 +51,7 @@ export function AppProvider({ children }) {
       try {
         await validateSession();
         setIsLogged(true);
+        loadMenu();
       } catch (error) {
         returnLogin();
       }
