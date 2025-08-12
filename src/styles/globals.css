@@ -34,8 +34,8 @@ section.main-view {
   grid-template-rows: 80px 1fr;
   grid-template-columns: 250px 1fr;
   grid-template-areas:
-    "header header"
-    "sidebar main";
+    'header header'
+    'sidebar main';
   transition: grid-template-columns 0.3s ease;
 
   & header.section-header {
@@ -47,23 +47,23 @@ section.main-view {
     color: black;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
     grid-template-columns: 120px 1fr auto;
-    
+
     & h1 {
       color: black;
       font-weight: 600;
     }
-    
+
     & .ayuda-app {
       color: rgba(0, 0, 0, 0.7);
       text-decoration: none;
       font-size: 0.9rem;
-      
+
       &:hover {
         color: black;
         text-decoration: underline;
       }
     }
-    
+
     & .brand-image {
       filter: none;
     }
@@ -74,21 +74,21 @@ section.main-view {
       justify-content: end;
       align-items: center;
       gap: 15px;
-      
+
       & .info-session {
         display: flex;
         align-items: center;
         background: var(--primary-green);
         padding: 8px 15px;
         border-radius: 20px;
-        
+
         & label {
           color: white;
           font-weight: 500;
           cursor: pointer;
         }
       }
-      
+
       & .icon-logout {
         width: 40px;
         height: 40px;
@@ -99,14 +99,14 @@ section.main-view {
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease;
-        
+
         &:hover {
           background: rgba(34, 197, 94, 0.8);
           transform: scale(1.05);
         }
-        
+
         &:before {
-          content: "→";
+          content: '→';
           color: white;
           font-size: 18px;
           font-weight: bold;
@@ -121,10 +121,10 @@ section.main-view {
     background: white;
     box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    
+
     & nav {
       padding: 0;
-      
+
       & .menu-header {
         padding: 12px 20px;
         color: #9ca3af;
@@ -132,15 +132,15 @@ section.main-view {
         font-weight: 500;
         border-bottom: 1px solid #f3f4f6;
       }
-      
+
       & ul {
         list-style: none;
         padding: 0;
         margin: 0;
-        
+
         & li {
           margin: 0;
-          
+
           & .menu-category {
             padding: 8px 20px 4px 20px;
             color: #9ca3af;
@@ -148,7 +148,7 @@ section.main-view {
             font-weight: 500;
             margin-top: 12px;
           }
-          
+
           & .menu-item {
             width: 100%;
             text-align: left;
@@ -160,19 +160,19 @@ section.main-view {
             font-weight: 400;
             transition: all 0.2s ease;
             border-left: 3px solid transparent;
-            
+
             &.main-item.active {
               background: var(--primary-green-bg);
               color: var(--accent-green);
               border-left-color: var(--primary-green);
               font-weight: 500;
             }
-            
+
             &:hover:not(.active) {
               background: #f9fafb;
               color: #374151;
             }
-            
+
             &.active:not(.main-item) {
               background: #f3f4f6;
               color: #374151;
@@ -180,12 +180,12 @@ section.main-view {
           }
         }
       }
-      
+
       & .menu-footer {
         position: absolute;
         bottom: 20px;
         left: 20px;
-        
+
         & .collapse-btn {
           background: none;
           border: none;
@@ -194,13 +194,13 @@ section.main-view {
           cursor: pointer;
           display: flex;
           align-items: center;
-          
+
           &:hover {
             color: #6b7280;
           }
-          
+
           &:before {
-            content: "📁";
+            content: '📁';
             margin-right: 6px;
           }
         }
@@ -210,8 +210,9 @@ section.main-view {
 
   & main.section-view {
     grid-area: main;
-    padding: 30px;
+    padding: 0px;
     background: #fafafa;
+    display: grid;
   }
 }
 
@@ -258,4 +259,52 @@ section.main-view.menu-collapsed {
 
 .menu-header .collapse-btn:hover {
   color: #374151;
+}
+
+/*ESTILOS CONTENEDOR DE FORMULARIOS*/
+#containerForms .container-header-forms {
+  border: none;
+  border-radius: 0px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(10px, 200px);
+  grid-template-columns: repeat(auto-fit, minmax(10px, 200px));
+  padding: 0px 30px 0px 0px;
+  width: 100%;
+  & label {
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    text-transform: capitalize;
+  }
+  & .item-header-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    color: var(--primary-green);
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    border-bottom: solid 3px var(--primary-green);
+    opacity: 0.4;
+
+    &:hover {
+      color: var(--primary-green-dark);
+      opacity: 0.8;
+    }
+
+    &.active {
+      font-weight: bold;
+      opacity: 1;
+    }
+
+    & span.close-icon {
+      position: absolute;
+      right: 5px;
+      font-size: 1.2rem;
+      top: 0px;
+      line-height: 1.2rem;
+    }
+  }
 }

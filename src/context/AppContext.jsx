@@ -6,8 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import setLogOut from '@sistec/services/login/setLogOut';
 import useStorage from '@sistec/hooks/useStorage';
-import { getPageJsonConfiguration } from "@sistec/services/common/getConfigurations";
-
+import { getPageJsonConfiguration } from '@sistec/services/common/getConfigurations';
 
 const appContext = createContext();
 
@@ -17,7 +16,11 @@ export const useApp = () => {
   return context;
 };
 
-const listForms = [{ id_form: '1', label: 'prueba', url: '/SAI/land/prueba' }];
+const listForms = [
+  { id_form: '1', label: 'prueba', url: '/SAC/formulario', visible: true },
+  { id_form: '2', label: 'prueba2', url: '/SAC/formulario', visible: false },
+  { id_form: '3', label: 'prueba3', url: '/SAC/formulario', visible: false },
+];
 
 export function AppProvider({ children }) {
   const router = useRouter();
@@ -25,7 +28,7 @@ export function AppProvider({ children }) {
   const { removeItem } = useStorage();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [loadedForms, setLoadedForms] = useState([]);
+  const [loadedForms, setLoadedForms] = useState(listForms);
   const [user, setUserData] = useState();
   const validateActive = () => {
     if (typeof window !== 'undefined') {
@@ -45,7 +48,7 @@ export function AppProvider({ children }) {
   }, [pathname, searchParams]);
 
   useLayoutEffect(() => {
-      if (isPublicRoute) return; 
+    if (isPublicRoute) return;
 
     async function validate() {
       try {
@@ -60,16 +63,15 @@ export function AppProvider({ children }) {
 
   const loggedIn = () => {
     setIsLogged(true);
-     loadMenu();
-    
+    loadMenu();
   };
 
   async function loadMenu() {
     try {
-      const menuItems = await getPageJsonConfiguration("menu", "menu-items");
-      setMenu(menuItems?.data || []); 
+      const menuItems = await getPageJsonConfiguration('menu', 'menu-items');
+      setMenu(menuItems?.data || []);
     } catch (error) {
-      console.error("Error loading menu:", error);
+      console.error('Error loading menu:', error);
       setMenu([]);
     }
   }
@@ -105,6 +107,18 @@ export function AppProvider({ children }) {
     }
   }
 
+  function changeForm(idForm) {
+    const copyLoadedForms = [...loadedForms];
+    for (let itemForm of copyLoadedForms) {
+      if (itemForm.id_form === idForm) {
+        itemForm.visible = true;
+      } else {
+        itemForm.visible = false;
+      }
+    }
+    setLoadedForms(copyLoadedForms);
+  }
+
   return (
     <appContext.Provider
       value={{
@@ -113,9 +127,11 @@ export function AppProvider({ children }) {
         offLoad,
         setUserData,
         user,
+        setLoadedForms,
         loadedForms,
         isLogged,
         loggedIn,
+        changeForm,
         menu,
         returnLogin,
         getToken,
@@ -123,7 +139,7 @@ export function AppProvider({ children }) {
       }}
     >
       <ToastContainer />
-      {(isPublicRoute || isLogged) ? children : <></>}
+      {isPublicRoute || isLogged ? children : <></>}
     </appContext.Provider>
   );
 }
