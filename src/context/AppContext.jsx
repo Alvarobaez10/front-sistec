@@ -6,6 +6,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import setLogOut from '@sistec/services/login/setLogOut';
 import useStorage from '@sistec/hooks/useStorage';
+import { getPageJsonConfiguration } from "@sistec/services/common/getConfigurations";
+
 
 const appContext = createContext();
 
@@ -33,6 +35,7 @@ export function AppProvider({ children }) {
   const publicRoutes = ['/login', '/forgotpassword'];
   const isPublicRoute = publicRoutes.includes(pathname);
   const [isLogged, setIsLogged] = useState(false);
+  const [menu, setMenu] = useState([]);
 
   useLayoutEffect(() => {
     const url = pathname + searchParams.toString();
@@ -57,7 +60,19 @@ export function AppProvider({ children }) {
 
   const loggedIn = () => {
     setIsLogged(true);
+     loadMenu();
+    
   };
+
+  async function loadMenu() {
+    try {
+      const menuItems = await getPageJsonConfiguration("menu", "menu-items");
+      setMenu(menuItems?.data || []); 
+    } catch (error) {
+      console.error("Error loading menu:", error);
+      setMenu([]);
+    }
+  }
 
   const returnLogin = () => {
     router.push('/login');
@@ -101,6 +116,7 @@ export function AppProvider({ children }) {
         loadedForms,
         isLogged,
         loggedIn,
+        menu,
         returnLogin,
         getToken,
         logOut,
