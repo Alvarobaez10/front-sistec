@@ -1,5 +1,7 @@
 'use client';
+
 import React, { useState } from 'react';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@sistec/components/common/accordion/Acoordion";
 import RenderForm from '@sistec/components/common/RenderForm';
 import { cn } from '@sistec/helpers/utils';
 
@@ -12,15 +14,24 @@ export default function Formulario({ config }) {
   }
 
   return (
-    <div className={cn('', config?.parentContainerClass)}>
-      <RenderForm
-        key={'form-informacion_general' + keyForm}
-        fields={config?.informacion_general}
-        options={config?.options ?? []}
-        setDatosForm={changeDataForm}
-        datosForm={datosForm?.informacion_general ?? {}}
-        origin={'informacion_general'}
-      />
-    </div>
+    <Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="item-1">
+        <AccordionTrigger>
+          Información General
+        </AccordionTrigger>
+        <AccordionContent>
+          <div className={cn('', config?.parentContainerClass)}>
+            <RenderForm
+              key={'form-informacion_general' + keyForm}
+              fields={config?.informacion_general}
+              options={config?.options ?? []}
+              setDatosForm={changeDataForm}
+              datosForm={datosForm?.informacion_general ?? {}}
+              origin={'informacion_general'}
+            />
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
