@@ -4,7 +4,13 @@ import React, { useRef } from 'react';
 
 export default function ContainerForms() {
   const iframesRef = useRef({});
-  const { loadedForms, changeForm } = useApp();
+  const { loadedForms, changeForm, closeForm } = useApp();
+
+  const handleCloseForm = (e, formId) => {
+    e.preventDefault();
+    e.stopPropagation(); 
+    closeForm(formId);
+  };
 
   function renderHeader() {
     let html = [];
@@ -17,7 +23,12 @@ export default function ContainerForms() {
           onClick={() => changeForm(form.id_form)}
         >
           <label>{form.label}</label>
-          <span className="close-icon">&times;</span>
+           <span 
+            className="close-icon"
+            onClick={(e) => handleCloseForm(e, form.id_form)}
+          >
+            &times;
+          </span>
         </div>
       );
     }

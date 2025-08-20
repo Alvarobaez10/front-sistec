@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import setLogOut from '@sistec/services/login/setLogOut';
 import useStorage from '@sistec/hooks/useStorage';
 import { getPageJsonConfiguration } from '@sistec/services/common/getConfigurations';
+import { getMenu } from '@sistec/services/common/getMenu';
 
 const appContext = createContext();
 
@@ -28,7 +29,7 @@ export function AppProvider({ children }) {
   const { removeItem } = useStorage();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [loadedForms, setLoadedForms] = useState(listForms);
+  const [loadedForms, setLoadedForms] = useState([]);
   const [user, setUserData] = useState();
   const validateActive = () => {
     if (typeof window !== 'undefined') {
@@ -69,7 +70,7 @@ export function AppProvider({ children }) {
 
   async function loadMenu() {
     try {
-      const menuItems = await getPageJsonConfiguration('menu', 'menu-items');
+      const menuItems = await getMenu();
       setMenu(menuItems?.data || []);
     } catch (error) {
       console.error('Error loading menu:', error);
@@ -108,17 +109,43 @@ export function AppProvider({ children }) {
     }
   }
 
-  function changeForm(idForm) {
-    const copyLoadedForms = [...loadedForms];
-    for (let itemForm of copyLoadedForms) {
-      if (itemForm.id_form === idForm) {
-        itemForm.visible = true;
-      } else {
-        itemForm.visible = false;
-      }
-    }
-    setLoadedForms(copyLoadedForms);
+function openForm(form) {
+  const copyLoadedForms = [...loadedForms];
+  const exists = copyLoadedForms.find(f => f.id_form === form.id_form);
+
+  if (exists) {
+    copyLoadedForms.forEach(f => (f.visible = f.id_form === form.id_form));
+  } else {
+    copyLoadedForms.forEach(f => (f.visible = false));
+    copyLoadedForms.push({ ...form, visible: true });
   }
+  setLoadedForms(copyLoadedForms);
+}
+
+
+ function changeForm(idForm) {
+  const copyLoadedForms = [...loadedForms];
+  copyLoadedForms.forEach(f => (f.visible = f.id_form === idForm));
+  setLoadedForms(copyLoadedForms);
+}
+
+ const closeForm = (formId) => {
+    setLoadedForms(prev => {
+      const filteredForms = prev.filter(form => form.id_form !== formId);
+      
+      const wasActive = prev.find(form => form.id_form === formId)?.visible;
+      
+      if (wasActive && filteredForms.length > 0) {
+        return filteredForms.map((form, index) => ({
+          ...form,
+          visible: index === filteredForms.length - 1
+        }));
+      }
+      
+      return filteredForms;
+    });
+  };
+
 
   return (
     <appContext.Provider
@@ -132,6 +159,8 @@ export function AppProvider({ children }) {
         loadedForms,
         isLogged,
         loggedIn,
+        openForm,
+        closeForm,
         changeForm,
         menu,
         returnLogin,
