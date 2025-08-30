@@ -30,26 +30,29 @@ export default function Header() {
     );
   }
 
+  const getUserInitials = () => {
+    const nombre = infoUser.nombre || '';
+    const apellido = infoUser.apellido || '';
+    return `${nombre.charAt(0)}${apellido.charAt(0)}`.toUpperCase();
+  };
+
   return (
     <header className="section-header">
-      <Image src={'/logo.png'} alt="SAC Logo" className="brand-image" width={100} height={40} />
-      
-      <div>
-        <h1 className="text-xl font-semibold">SAC - Sistema de asociaciones y compradores</h1>
-        <a className="ayuda-app" href="#ayuda">Ayuda del sistema</a>
-      </div>
-      
       <div className="div-info-session">
-        <div className="info-session">
-          <label>
-            {infoUser.nombre ?? ''} {infoUser.apellido ?? ''}
-          </label>
+        <span className="user-name-only">
+          {infoUser.nombre ?? ''} {infoUser.apellido ?? ''}
+        </span>
+        <div className="user-avatar">
+          {getUserInitials()}
         </div>
-        <span 
-          className="icon-logout" 
-          onClick={() => validateLogout()}
+        <button
+          className="logout-button"
+          onClick={validateLogout}
           title="Cerrar sesión"
-        ></span>
+        >
+          <span>Cerrar Sesión</span>
+          <span className="logout-icon">→</span>
+        </button>
       </div>
     </header>
   );
