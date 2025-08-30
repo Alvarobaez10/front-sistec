@@ -32,24 +32,28 @@ export default function Header() {
 
   return (
     <header className="section-header">
-      <Image src={'/logo.png'} alt="SAC Logo" className="brand-image" width={100} height={40} />
-      
+      {/* <Image src={'/logo.png'} alt="SAC Logo" className="brand-image" width={100} height={40} /> */}
+
       <div>
-        <h1 className="text-xl font-semibold">SAC - Sistema de asociaciones y compradores</h1>
-        <a className="ayuda-app" href="#ayuda">Ayuda del sistema</a>
+        {/* <h1 className="text-xl font-semibold">SAC - Sistema de asociaciones y compradores</h1>
+        <a className="ayuda-app" href="#ayuda">
+          Ayuda del sistema
+        </a> */}
       </div>
-      
+
       <div className="div-info-session">
         <div className="info-session">
-          <label>
+          <label className="color-gray-text capitalize">
             {infoUser.nombre ?? ''} {infoUser.apellido ?? ''}
           </label>
+          <div className="container-initials">
+            {infoUser.nombre ? infoUser.nombre.charAt(0).toUpperCase() : ''}
+            {infoUser.apellido ? infoUser.apellido.charAt(0).toUpperCase() : ''}
+          </div>
         </div>
-        <span 
-          className="icon-logout" 
-          onClick={() => validateLogout()}
-          title="Cerrar sesión"
-        ></span>
+        <button onClick={() => validateLogout()} className="btn-logout text-sm">
+          Cerrar sesión <span className="icon-logout" title="Cerrar sesión"></span>
+        </button>
       </div>
     </header>
   );

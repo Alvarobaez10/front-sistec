@@ -1,17 +1,14 @@
 @import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --primary-green: #22c55e;
-  --primary-green-dark: #16a34a;
-  --primary-green-light: #4ade80;
-  --primary-green-bg: #dcfce7;
-  --accent-green: #15803d;
+  --primary: #0f1368;
+  --secondary: #3758f9;
+  --accent: #3b8fee;
+  --light: #e9f5fe;
+  --gray-text: #4d4d4d;
+  --white-color-label: #F8F8F8;
 }
 
 @theme inline {
@@ -26,6 +23,10 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+.color-gray-text {
+  color: var(--gray-text);
 }
 
 section.main-view {
@@ -77,39 +78,45 @@ section.main-view {
       & .info-session {
         display: flex;
         align-items: center;
-        background: var(--primary-green);
         padding: 8px 15px;
         border-radius: 20px;
+        gap: 10px;
 
-        & label {
-          color: white;
-          font-weight: 500;
-          cursor: pointer;
+        & .container-initials {
+          background: var(--primary);
+          color: #fff;
+          font-weight: 600;
+          height: 40px;
+          width: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
         }
+      }
+      & .btn-logout {
+        background: var(--accent);
+        color: var(--white-color-label);
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        cursor: pointer;
+        padding: 10px 15px;
+        border-radius: 10px;
+        align-items: center;
       }
 
       & .icon-logout {
-        width: 40px;
-        height: 40px;
-        background: var(--primary-green);
-        border-radius: 50%;
+        width: 20px;
+        height: 20px;
         cursor: pointer;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-
-        &:hover {
-          background: rgba(34, 197, 94, 0.8);
-          transform: scale(1.05);
-        }
-
-        &:before {
-          content: '→';
-          color: white;
-          font-size: 18px;
-          font-weight: bold;
-        }
+        background-image: url('../assets/icons/icon-logout.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+          filter: brightness(0) invert(1);
       }
     }
   }
@@ -161,9 +168,9 @@ section.main-view {
             border-left: 3px solid transparent;
 
             &.main-item.active {
-              background: var(--primary-green-bg);
+              background: var(--light);
               color: var(--accent-green);
-              border-left-color: var(--primary-green);
+              border-left-color: var(--primary);
               font-weight: 500;
             }
 
@@ -281,15 +288,15 @@ section.main-view.menu-collapsed {
     align-items: center;
     justify-content: center;
     padding: 5px 10px;
-    color: var(--primary-green);
+    color: var(--primary);
     font-weight: 500;
     cursor: pointer;
     position: relative;
-    border-bottom: solid 3px var(--primary-green);
+    border-bottom: solid 3px var(--primary);
     opacity: 0.4;
 
     &:hover {
-      color: var(--primary-green-dark);
+      color: var(--secondary);
       opacity: 0.8;
     }
 
@@ -307,5 +314,3 @@ section.main-view.menu-collapsed {
     }
   }
 }
-
-

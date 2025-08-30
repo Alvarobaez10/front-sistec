@@ -82,7 +82,7 @@ export default function Login() {
             </div>
 
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">Iniciar Sesión</h2>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-text text-sm">
               Ingresa con los datos que proporcionaste en el proceso de inscripción
             </p>
           </div>
