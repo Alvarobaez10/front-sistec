@@ -75,10 +75,10 @@ export default function Login() {
       <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-8 flex-shrink-0">
         <div className="w-full max-w-md">
           {/* Header del formulario */}
-          <div className="text-center mb-8">
+          <div className="mb-8">
             {/* Icono */}
-            <div className="w-12 h-12 mx-auto mb-6 bg-blue-600 rounded-lg flex items-center justify-center">
-              <img className="w-6 h-6 Logo-image" />
+            <div className="w-12 h-12 mb-6 bg-blue-600 rounded-lg flex items-start">
+              <img className="w-6 h-6 logo-image" />
             </div>
 
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">Iniciar Sesión</h2>

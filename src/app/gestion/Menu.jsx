@@ -9,23 +9,23 @@ export default function Menu() {
       id_form: item.id_formulario.toString(),
       label: item.nombre,
       url: item.enlace,
-      visible: true
+      visible: true,
     };
 
     openForm(form);
   };
 
   return (
-    <nav>
-      <ul>
-        {menu.map((item) => (
-          <li key={item.id_formulario}>
-            <button onClick={() => handleClick(item)}>
-              {item.nombre}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <aside className="sidebar">
+      <nav>
+        <ul>
+          {menu.map((item) => (
+            <li key={item.id_formulario}>
+              <button onClick={() => handleClick(item)}>{item.nombre}</button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
   );
 }

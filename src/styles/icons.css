@@ -8,42 +8,24 @@
   cursor: pointer;
 }
 
-
-
-.Logo-image {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  background-image: url('../assets/icons/Logo.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  cursor: pointer;
-}
-
-
-.overlay-image {
-  display: flex;
-  height: 100%;
-  width:  100%;
-  background-image: url('../assets/icons/overlay.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  cursor: pointer;
-}
-
-
-
+.logo-image,
+.overlay-image,
 .sidebar-image {
   display: flex;
   height: 100%;
   width: 100%;
-  background-image: url('../assets/icons/sidebar.svg');
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
-  cursor: pointer;
 }
 
+.logo-image {
+  background-image: url('../assets/icons/Logo.svg');
+}
 
+.overlay-image {
+  background-image: url('../assets/icons/overlay.svg');
+}
 
-
-
+.sidebar-image {
+  background-image: url('../assets/icons/sidebar.svg');
+}
