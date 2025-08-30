@@ -30,6 +30,12 @@ export default function Header() {
     );
   }
 
+  const getUserInitials = () => {
+    const nombre = infoUser.nombre || '';
+    const apellido = infoUser.apellido || '';
+    return `${nombre.charAt(0)}${apellido.charAt(0)}`.toUpperCase();
+  };
+
   return (
     <header className="section-header">
       {/* <Image src={'/logo.png'} alt="SAC Logo" className="brand-image" width={100} height={40} /> */}

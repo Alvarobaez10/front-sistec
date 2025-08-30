@@ -1,31 +1,44 @@
 'use client';
 import { useApp } from '@sistec/context/AppContext';
+import { useGroupedMenu } from '@sistec/hooks/useGroupedMenu';
+import MenuGroup from '@sistec/components/common/MenuGroup';
 
 export default function Menu() {
-  const { menu, openForm } = useApp();
+  const { menu, openForm, loadedForms } = useApp();
+  const groupedMenu = useGroupedMenu(menu);
+  const activeForm = loadedForms.find(form => form.visible);
+  const activeFormId = activeForm?.id_form;
 
   const handleClick = (item) => {
-    const form = {
+    openForm({
       id_form: item.id_formulario.toString(),
-      label: item.nombre,
+      label: item.formulario,
       url: item.enlace,
       visible: true,
-    };
-
-    openForm(form);
+    });
   };
 
   return (
-    <aside className="sidebar">
-      <nav>
-        <ul>
-          {menu.map((item) => (
-            <li key={item.id_formulario}>
-              <button onClick={() => handleClick(item)}>{item.nombre}</button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+    <aside className="section-menu">
+      <div className="logo-container">
+        <div className="logo-image"></div>
+        <span className="brand-name">SAC</span>
+      </div>
+
+      <div className="menu-content">
+        <nav>
+          <ul>
+            {groupedMenu.map(grupo => (
+              <MenuGroup
+                key={grupo.id_grupo}
+                grupo={grupo}
+                activeFormId={activeFormId}
+                onSelect={handleClick}
+              />
+            ))}
+          </ul>
+        </nav>
+      </div>
     </aside>
   );
 }

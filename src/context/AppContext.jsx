@@ -70,7 +70,13 @@ export function AppProvider({ children }) {
 
   async function loadMenu() {
     try {
-      const menuItems = await getMenu();
+      const token = await getToken();
+      if (!token) {
+        setMenu([]);
+        return;
+      }
+
+      const menuItems = await getMenu(token);
       setMenu(menuItems?.data || []);
     } catch (error) {
       console.error('Error loading menu:', error);
