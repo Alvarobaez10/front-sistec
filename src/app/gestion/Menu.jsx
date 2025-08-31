@@ -2,6 +2,7 @@
 import { useApp } from '@sistec/context/AppContext';
 import { useGroupedMenu } from '@sistec/hooks/useGroupedMenu';
 import MenuGroup from '@sistec/components/common/MenuGroup';
+import '../../styles/menu.css';
 
 export default function Menu() {
   const { menu, openForm, loadedForms } = useApp();

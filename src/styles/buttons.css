@@ -1,0 +1,32 @@
+.btn-primary {
+  background: var(--primary);
+  border: solid 1px var(--primary);
+  color: var(--white-color-label);
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 10px;
+  align-items: center;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.btn-secondary {
+  border: solid 1px var(--accent);
+  background-color: var(--accent);;
+  color: var(--white-color-label);
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 10px;
+  align-items: center;
+  &:hover {
+    opacity: 0.9;
+  }
+}

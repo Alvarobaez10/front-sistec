@@ -27,13 +27,13 @@ export const showConfirm = (message, onConfirm, position = 'top-center') => {
         <div className="flex justify-end gap-2">
           <button
             onClick={() => closeConfirm(true)}
-            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
+            className="btn-primary text-sm"
           >
             Sí
           </button>
           <button
             onClick={() => closeConfirm(false)}
-            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
+            className="btn-secondary text-sm"
           >
             No
           </button>

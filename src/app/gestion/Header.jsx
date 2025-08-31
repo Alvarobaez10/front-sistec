@@ -5,6 +5,7 @@ import { useApp } from '@sistec/context/AppContext';
 import useStorage from '@sistec/hooks/useStorage';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import '../../styles/header.css';
 
 export default function Header() {
   const { logOut } = useApp();
@@ -29,12 +30,6 @@ export default function Header() {
       'top-center'
     );
   }
-
-  const getUserInitials = () => {
-    const nombre = infoUser.nombre || '';
-    const apellido = infoUser.apellido || '';
-    return `${nombre.charAt(0)}${apellido.charAt(0)}`.toUpperCase();
-  };
 
   return (
     <header className="section-header">

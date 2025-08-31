@@ -6,6 +6,7 @@ import setLogin from '@sistec/services/login/setLogin';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import '../../styles/login.css';
 
 export default function Login() {
   const { onLoad, offLoad, loggedIn } = useApp();
@@ -14,7 +15,6 @@ export default function Login() {
   const [user, setUser] = useState('admin-sac');
   const [password, setPassword] = useState('12345*');
   const [isLoading, setIsLoading] = useState(false);
-
 
   useEffect(() => {
     offLoad();
@@ -54,21 +54,15 @@ export default function Login() {
     }
   }
 
-
-
   return (
     <div className="min-h-screen h-screen w-full flex fixed inset-0 overflow-hidden">
       {/* Panel izquierdo - Imagen industrial */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-shrink-0">
         {/* Imagen de fondo industrial */}
-        <div
-          className="absolute inset-0 bg-cover bg-center sidebar-image"
-        />
+        <div className="absolute inset-0 bg-cover bg-center sidebar-image" />
 
         {/* Overlay azul */}
-        <div
-          className="absolute inset-0 bg-cover bg-center overlay-image"
-        />
+        <div className="absolute inset-0 bg-cover bg-center overlay-image" />
       </div>
 
       {/* Panel derecho - Formulario */}
@@ -77,12 +71,10 @@ export default function Login() {
           {/* Header del formulario */}
           <div className="mb-8">
             {/* Icono */}
-            <div className="w-12 h-12 mb-6 bg-blue-600 rounded-lg flex items-start">
-              <img className="w-6 h-6 logo-image" />
-            </div>
+            <i className="logo-image"></i>
 
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">Iniciar Sesión</h2>
-            <p className="text-gray-text text-sm">
+            <p className="gray-text text-sm">
               Ingresa con los datos que proporcionaste en el proceso de inscripción
             </p>
           </div>
@@ -90,9 +82,7 @@ export default function Login() {
           {/* Formulario */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Usuario
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
               <input
                 type="text"
                 required
@@ -104,9 +94,7 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contraseña
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
               <input
                 type="password"
                 required
@@ -120,7 +108,8 @@ export default function Login() {
             <button
               type="submit"
               disabled={!user || !password || isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-md transition-colors duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-md transition-colors duration-200 disabled:bg-blue-400 
+              disabled:cursor-not-allowed shadow-sm hover:shadow-md cursor-pointer"
             >
               {isLoading ? 'Iniciando...' : 'Iniciar Sesión'}
             </button>
@@ -129,14 +118,12 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => router.push('/forgotpassword')}
-                className="text-sm text-gray-600  hover:text-gray-800 transition-colors duration-200"
+                className="text-sm text-gray-600  hover:text-gray transition-colors duration-200 cursor-pointer"
               >
                 ¿Olvidaste tu contraseña?
               </button>
             </div>
           </form>
-
-
         </div>
       </div>
     </div>

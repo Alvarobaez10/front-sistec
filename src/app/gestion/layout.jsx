@@ -4,6 +4,8 @@ import Header from './Header';
 import Menu from './Menu';
 import { useApp } from '@sistec/context/AppContext';
 import ContainerForms from './ContainerForms';
+import '../../styles/layout-gestion.css';
+import '../../styles/buttons.css';
 
 export default function RootLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
