@@ -10,6 +10,7 @@ import renderInput from '@sistec/helpers/formElements/renderInput';
 import formatNumberMoney, { preventValueMoney } from '@sistec/helpers/formatMoney';
 import renderHtmlDescription from '@sistec/helpers/formElements/renderHtmlDescription';
 import renderFile from '@sistec/helpers/formElements/renderFile';
+import { cn } from '@sistec/helpers/utils';
 
 function GroupInput({
   show,
@@ -171,7 +172,7 @@ function GroupInput({
   ) : null;
 
   return (
-    <div className={classContainer}>
+    <div className={cn("p-1",classContainer)} >
       {titleFormInput}
       {html}
     </div>
