@@ -1,8 +1,38 @@
-import { get } from "lodash";
-import Select from "react-select";
-import AsyncSelect from "react-select/async";
+import { get } from 'lodash';
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 
-function renderSelect(config, className = "", options, value, mode, valueMap) {
+const customStyles = {
+  option: ({ isFocused, isSelected }) =>
+    `px-2 py-1 !cursor-pointer !text-sm ${
+      isSelected
+        ? '!bg-[var(--accent)] !text-[var(--white-color-label)]'
+        : isFocused
+        ? 'bg-blue-100'
+        : 'bg-white'
+    }`,
+  menu: () => 'mt-1 rounded-md border border-gray-200 bg-white shadow-md',
+  singleValue: () => 'text-gray-800',
+  clearIndicator: () => 'cursor-pointer [&>svg]:w-4 [&>svg]:h-4',
+  dropdownIndicator: () => 'cursor-pointer [&>svg]:w-4 [&>svg]:h-4',
+};
+const customStylesSingle = {
+  control: ({ isFocused }) =>
+    `w-full border rounded-[5px] p-0 text-sm  shadow-none h-[35px] !min-h-[35px]
+           ${isFocused ? '!border-gray-300 ring-1 ring-blue-300' : 'border-gray-300'}
+           disabled:bg-gray-100 disabled:cursor-not-allowed`,
+  indicatorsContainer: () => 'h-full',
+};
+const customStylesMulti = {
+  control: ({ isFocused }) =>
+    `w-full border rounded-[5px] p-0 text-sm  !shadow-none !min-h-[35px]
+           ${isFocused ? '!border-gray-300 ring-1 ring-blue-300' : 'border-gray-300'}
+           disabled:bg-gray-100 disabled:cursor-not-allowed`,
+  multiValue: () => '!bg-blue-100',
+  multiValueRemove: () => 'cursor-pointer',
+};
+
+function renderSelect(config, className = '', options, value, mode, valueMap) {
   const { id, idParent, idSon, action, ...otherConfig } = config;
   let { disabled } = config;
 
@@ -12,11 +42,9 @@ function renderSelect(config, className = "", options, value, mode, valueMap) {
   if (idParent) {
     const valueParent = get(valueMap, idParent);
     if (valueParent && valueParent !== -1) {
-      options = options.filter(
-        (object) => String(object.id_parent) === String(valueParent)
-      );
+      options = options.filter((object) => String(object.id_parent) === String(valueParent));
     } else {
-      options = options.filter((object) => String(object.id_parent) === "-1");
+      options = options.filter((object) => String(object.id_parent) === '-1');
     }
 
     if (options.length === 0) {
@@ -30,7 +58,7 @@ function renderSelect(config, className = "", options, value, mode, valueMap) {
   let html = <></>;
 
   // SELECT NATIVO
-  if (mode === "single") {
+  if (mode === 'single') {
     const firstOption = config.placeholder ? (
       <option key={-1} value={-1}>
         {config.placeholder}
@@ -43,7 +71,10 @@ function renderSelect(config, className = "", options, value, mode, valueMap) {
         disabled={disabled}
         {...otherConfig}
         value={String(value)}
-        className={`block w-full rounded-[25px] border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        className={`w-full border border-gray-300 rounded-[5px] px-2 py-1 text-sm 
+              focus:outline-none focus:ring-1 focus:ring-blue-300 
+              disabled:bg-gray-100 disabled:cursor-not-allowed 
+              h-[35px] ${className}`}
       >
         {firstOption}
         {options.map((item) => (
@@ -56,11 +87,12 @@ function renderSelect(config, className = "", options, value, mode, valueMap) {
   }
 
   // SELECT AUTOCOMPLETE
-  else if (mode === "autocomplete") {
+  else if (mode === 'autocomplete') {
     html = (
       <Select
-        noOptionsMessage={() => "Sin resultados"}
+        noOptionsMessage={() => 'Sin resultados'}
         className={`react-select-container ${className}`}
+        classNames={{ ...customStyles, ...customStylesSingle }}
         classNamePrefix="select-autocomplete"
         isDisabled={disabled}
         isClearable
@@ -73,16 +105,22 @@ function renderSelect(config, className = "", options, value, mode, valueMap) {
   }
 
   // SELECT MULTI
-  else if (mode === "multi") {
+  else if (mode === 'multi') {
+    options = [
+      { value: 'option1', label: 'Opción 1' },
+      { value: 'option2', label: 'Opción 2' },
+      { value: 'option3', label: 'Opción 3' },
+      { value: 'option4', label: 'Opción 4' },
+      { value: 'option5', label: 'Opción 5' },
+    ];
     const selectedValues =
-      value?.map((val) =>
-        options.find((option) => String(option.value) === String(val))
-      ) || [];
+      value?.map((val) => options.find((option) => String(option.value) === String(val))) || [];
 
     html = (
       <Select
-        noOptionsMessage={() => "Sin resultados"}
-        className={`react-select-container ${className}`}
+        noOptionsMessage={() => 'Sin resultados'}
+        classNames={{ ...customStyles, ...customStylesMulti }}
+        className={`react-select-container`}
         classNamePrefix="select-multiple"
         isDisabled={disabled}
         isClearable
@@ -96,12 +134,13 @@ function renderSelect(config, className = "", options, value, mode, valueMap) {
   }
 
   // SELECT ASYNC
-  else if (mode === "async") {
+  else if (mode === 'async') {
     html = (
       <AsyncSelect
-        noOptionsMessage={() => "Sin resultados"}
-        loadingMessage={() => "Cargando..."}
-        className={`react-select-container ${className}`}
+        noOptionsMessage={() => 'Sin resultados'}
+        loadingMessage={() => 'Cargando...'}
+        classNames={{ ...customStyles, ...customStylesSingle }}
+        className={`react-select-container`}
         classNamePrefix="select-autocomplete"
         isDisabled={disabled}
         isClearable
@@ -114,17 +153,16 @@ function renderSelect(config, className = "", options, value, mode, valueMap) {
   }
 
   // SELECT ASYNC MULTI
-  else if (mode === "async-multi") {
+  else if (mode === 'async-multi') {
     const selectedValues =
-      value?.map((val) =>
-        options.find((option) => String(option.value) === String(val))
-      ) || [];
+      value?.map((val) => options.find((option) => String(option.value) === String(val))) || [];
 
     html = (
       <AsyncSelect
-        noOptionsMessage={() => "Sin resultados"}
-        loadingMessage={() => "Cargando..."}
-        className={`react-select-container ${className}`}
+        noOptionsMessage={() => 'Sin resultados'}
+        loadingMessage={() => 'Cargando...'}
+        classNames={{ ...customStyles, ...customStylesMulti }}
+        className={`react-select-container`}
         classNamePrefix="select-multiple"
         isDisabled={disabled}
         isClearable

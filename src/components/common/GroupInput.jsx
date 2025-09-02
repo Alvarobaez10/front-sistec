@@ -74,13 +74,23 @@ function GroupInput({
       break;
     case 'textarea':
       html = (
-        <textarea className={`border p-2 rounded ${className}`} {...config} value={value ?? ''} />
+        <textarea
+          className={`w-full border border-gray-300 rounded-[5px] px-2 py-1 text-sm 
+        focus:outline-none focus:ring-1 focus:ring-blue-300 
+        disabled:bg-gray-100 disabled:cursor-not-allowed 
+       min-h-[72px] ${className}`}
+          {...config}
+          value={value ?? ''}
+        />
       );
       break;
     case 'money':
       html = (
         <input
-          className={`border p-2 rounded ${className}`}
+          className={`w-full border border-gray-300 rounded-[5px] px-2 py-1 text-sm 
+        focus:outline-none focus:ring-1 focus:ring-blue-300 
+        disabled:bg-gray-100 disabled:cursor-not-allowed 
+        h-[35px] ${className}`}
           {...config}
           value={formatNumberMoney(value) ?? ''}
           type="text"
@@ -89,14 +99,7 @@ function GroupInput({
       );
       break;
     case 'split':
-      html = (
-        <input
-          className={`border p-2 rounded ${className}`}
-          {...config}
-          value={value ?? ''}
-          type="text"
-        />
-      );
+      html = renderInput(config, className, value, 'text', valueMap);
       break;
     case 'group':
       html = renderHtmlGroup(config, className, options, valueMap);
@@ -128,13 +131,13 @@ function GroupInput({
             {formatLabel === '%'
               ? `${value}%`
               : formatLabel === '$'
-                ? Number(value).toLocaleString('es-CO', {
+              ? Number(value).toLocaleString('es-CO', {
                   style: 'currency',
                   currency: 'COP',
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
                 })
-                : value}
+              : value}
           </span>
         </div>
       );
@@ -156,8 +159,9 @@ function GroupInput({
   const titleFormInput = title ? (
     <label
       htmlFor={id}
-      className={`${isFieldDisabled ? 'opacity-50' : ''} ${required && showMultiLine ? 'font-semibold' : ''
-        }`}
+      className={`text-[0.91rem]  ${isFieldDisabled ? 'opacity-50' : ''} ${
+        required && showMultiLine ? 'font-semibold' : ''
+      }`}
       {...(showMultiLine ? propTitle : {})}
     >
       {showMultiLine ? (
@@ -172,7 +176,7 @@ function GroupInput({
   ) : null;
 
   return (
-    <div className={cn("p-1",classContainer)} >
+    <div className={cn('p-1', classContainer)}>
       {titleFormInput}
       {html}
     </div>
