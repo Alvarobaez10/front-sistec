@@ -106,13 +106,6 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
 
   // SELECT MULTI
   else if (mode === 'multi') {
-    options = [
-      { value: 'option1', label: 'Opción 1' },
-      { value: 'option2', label: 'Opción 2' },
-      { value: 'option3', label: 'Opción 3' },
-      { value: 'option4', label: 'Opción 4' },
-      { value: 'option5', label: 'Opción 5' },
-    ];
     const selectedValues =
       value?.map((val) => options.find((option) => String(option.value) === String(val))) || [];
 
