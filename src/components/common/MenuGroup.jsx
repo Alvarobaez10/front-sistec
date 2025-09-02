@@ -10,6 +10,7 @@ export default function MenuGroup({ grupo, activeFormId, onSelect }) {
               className={activeFormId === String(item.id_formulario) ? 'active' : ''}
               aria-current={activeFormId === String(item.id_formulario) ? 'page' : undefined}
             >
+              <span className="menu-icon"></span>
               {item.formulario}
             </button>
           </li>

@@ -40,6 +40,8 @@ aside.section-menu {
 }
 
 .menu-content button {
+  display: flex;
+  align-items: center;
   width: 100%;
   padding: 8px 20px;
   border: none;
@@ -55,9 +57,40 @@ aside.section-menu {
   background-color: #f3f4f6;
 }
 
-/* Estado activo */
+.brand-name {
+  font-size: 28px;
+  color: var(--primary);
+}
+
+.logo-image {
+  display: flex;
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('../assets/icons/Logo.svg');
+}
+
+.menu-icon {
+  display: flex;
+  height: 15px;
+  width: 15px;
+  margin-top: 4px;
+  margin-right: 7px;
+  background-image: url('../assets/icons/iconMenu.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+
 .menu-content button.active {
   background-color: #dbeafe !important;
   color: #1d4ed8 !important;
   font-weight: 500;
+}
+
+.menu-content button.active .menu-icon {
+  filter: brightness(0) saturate(100%) invert(18%) sepia(93%) saturate(3441%) hue-rotate(219deg) brightness(94%) contrast(93%);
 }
