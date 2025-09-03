@@ -32,35 +32,33 @@ export default function FormModal({
         <Fragment>
             <div className="form-modal-overlay" onClick={onClose} />
 
-            {/* Modal */}
             <div className="form-modal-container">
                 <div className="form-modal">
-                    
-                    {/* Botón de cerrar */}
-                    <button onClick={onClose} className="form-modal-close">
-                        ×
-                    </button>
-                     <h2 className="form-modal-title">{title}</h2>
 
-                    {/* Alerta verde si éxito */}
-                    {success && (
-                        <div className="form-modal-success">
-                            <div className="form-modal-success-title">Operación exitosa</div>
-                            <div>Información almacenada de manera correcta</div>
-                        </div>
-                    )}
-
-                    <div className="form-modal-grid">
-                        <RenderForm
-                            fields={fields}
-                            options={options}
-                            datosForm={formData}
-                            setDatosForm={setFormData}
-                            origin="modal"
-                        />
+                    <div className="form-modal-header">
+                        <h2 className="form-modal-title">{title}</h2>
+                        <button onClick={onClose} className="form-modal-close">×</button>
                     </div>
 
-                    {/* Botones */}
+                    <div className="form-modal-content">
+                        {success && (
+                            <div className="form-modal-success">
+                                <div className="form-modal-success-title">Operación exitosa</div>
+                                <div>Información almacenada de manera correcta</div>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                            <RenderForm
+                                fields={fields}
+                                options={options}
+                                datosForm={formData}
+                                setDatosForm={setFormData}
+                                origin="modal"
+                            />
+                        </div>
+                    </div>
+
                     <div className="form-modal-buttons">
                         <button
                             onClick={onClose}
