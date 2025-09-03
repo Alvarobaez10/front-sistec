@@ -1,0 +1,146 @@
+
+.table-wrapper {
+  width: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-head {
+  background-color: #f9fafb;
+}
+
+.table-head-cell {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  letter-spacing: 0.05em;
+}
+
+.table-body {
+  background-color: white;
+  border-top: 1px solid #e5e7eb;
+}
+
+.table-row {
+  transition: background-color 0.2s;
+}
+
+.table-row:hover {
+  background-color: #f9fafb;
+}
+
+.table-cell {
+  padding: 1rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.cell-badge {
+  display: inline-flex;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.badge-active {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-inactive {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-default {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+  background-color: #2563eb;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.btn-default:hover {
+  background-color: #1d4ed8;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pagination-btn {
+  padding: 0.5rem;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.pagination-btn:hover {
+  color: #4b5563;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-page {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  color: #374151;
+  transition: background-color 0.2s;
+}
+
+.pagination-page.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+.pagination-page:hover {
+  background-color: #f3f4f6;
+}
+
+.pagination-info {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.no-results {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #6b7280;
+}

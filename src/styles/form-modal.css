@@ -1,0 +1,158 @@
+/* Overlay/Backdrop */
+.form-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+}
+
+/* Modal Container */
+.form-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Modal Content */
+.form-modal {
+  position: relative;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 32rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* espacio entre los campos y secciones */
+}
+
+/* Close Button */
+.form-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 1.125rem;
+  font-weight: bold;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.form-modal-close:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+/* Success Alert */
+.form-modal-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  font-size: 0.875rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-modal-success-title {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+/* Form Container: campos en columna */
+.form-modal-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Inputs y selects */
+.form-modal-grid input,
+.form-modal-grid select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.form-modal-grid input:focus,
+.form-modal-grid select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+/* Buttons Container */
+.form-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* Cancel Button */
+.form-modal-cancel {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  color: #2563eb;
+  background-color: transparent;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.form-modal-cancel:hover {
+  background-color: #eff6ff;
+}
+
+.form-modal-cancel:disabled {
+  opacity: 0.5;
+}
+
+/* Save Button */
+.form-modal-save {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  background-color: #2563eb;
+  border: none;
+  cursor: pointer;
+}
+
+.form-modal-save:hover {
+  background-color: #1d4ed8;
+}
+
+.form-modal-save:disabled {
+  cursor: not-allowed;
+}
+
+.form-modal-save.loading {
+  background-color: #9ca3af;
+}
