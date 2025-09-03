@@ -70,7 +70,21 @@ function GroupInput({
       html = <input type="checkbox" checked={value} className={config.className} {...others} />;
       break;
     case 'switch':
-      html = <input type="checkbox" checked={value} {...others} className={className} />;
+      html = (
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={value || false}
+            className="sr-only"
+            onChange={(e) => setValue?.(e.target.checked)}
+            disabled={config.disabled}
+            {...others}
+          />
+          <div className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${value ? 'bg-green-500' : 'bg-gray-300'}`}>
+            <div className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full shadow transition-transform duration-200 ${value ? 'translate-x-full' : 'translate-x-0'}`}></div>
+          </div>
+        </label>
+      );
       break;
     case 'textarea':
       html = (
@@ -131,13 +145,13 @@ function GroupInput({
             {formatLabel === '%'
               ? `${value}%`
               : formatLabel === '$'
-              ? Number(value).toLocaleString('es-CO', {
+                ? Number(value).toLocaleString('es-CO', {
                   style: 'currency',
                   currency: 'COP',
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
                 })
-              : value}
+                : value}
           </span>
         </div>
       );
@@ -159,9 +173,8 @@ function GroupInput({
   const titleFormInput = title ? (
     <label
       htmlFor={id}
-      className={`text-[0.91rem]  mt-auto ${isFieldDisabled ? 'opacity-50' : ''} ${
-        required && showMultiLine ? 'font-semibold' : ''
-      }`}
+      className={`text-[0.91rem]  mt-auto ${isFieldDisabled ? 'opacity-50' : ''} ${required && showMultiLine ? 'font-semibold' : ''
+        }`}
       {...(showMultiLine ? propTitle : {})}
     >
       {showMultiLine ? (
