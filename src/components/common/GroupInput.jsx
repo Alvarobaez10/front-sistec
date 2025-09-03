@@ -159,7 +159,7 @@ function GroupInput({
   const titleFormInput = title ? (
     <label
       htmlFor={id}
-      className={`text-[0.91rem]  ${isFieldDisabled ? 'opacity-50' : ''} ${
+      className={`text-[0.91rem]  mt-auto ${isFieldDisabled ? 'opacity-50' : ''} ${
         required && showMultiLine ? 'font-semibold' : ''
       }`}
       {...(showMultiLine ? propTitle : {})}

@@ -1,13 +1,12 @@
 'use client';
-import { createContext, useContext, useLayoutEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import useStorage from '@sistec/hooks/useStorage';
+import { getMenu } from '@sistec/services/common/getMenu';
+import setLogOut from '@sistec/services/login/setLogOut';
 import validateSession from '@sistec/services/login/validateSession';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { createContext, useContext, useLayoutEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import setLogOut from '@sistec/services/login/setLogOut';
-import useStorage from '@sistec/hooks/useStorage';
-import { getPageJsonConfiguration } from '@sistec/services/common/getConfigurations';
-import { getMenu } from '@sistec/services/common/getMenu';
 
 const appContext = createContext();
 
@@ -17,11 +16,6 @@ export const useApp = () => {
   return context;
 };
 
-const listForms = [
-  { id_form: '1', label: 'prueba', url: '/SAC/formulario', visible: true },
-  { id_form: '2', label: 'prueba2', url: '/SAC/formulario', visible: false },
-  { id_form: '3', label: 'prueba3', url: '/SAC/formulario', visible: false },
-];
 
 export function AppProvider({ children }) {
   const router = useRouter();
@@ -92,6 +86,7 @@ export function AppProvider({ children }) {
     try {
       await setLogOut();
       setIsLogged(false);
+      setLoadedForms([]);
       removeItem('info-user', 'local');
       returnLogin();
     } catch (error) {
