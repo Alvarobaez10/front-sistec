@@ -1,44 +1,16 @@
-import { useState } from "react";
-import RenderForm from "@sistec/components/common/RenderForm";
-import AccionesBandeja from "./AccionesBandeja";
-import FormModal from "@sistec/components/common/FormModal";
+import { useState } from 'react';
+import RenderForm from '@sistec/components/common/RenderForm';
+import AccionesBandeja from './AccionesBandeja';
+import FormModal from '@sistec/components/common/FormModal';
 
 export default function FiltrosBandeja({
-  handleSearch,
-  setViewCard,
-  viewCard,
-  limpiarCampos,
+  handleAcciones,
   config,
   setFilters,
   dataFilters,
-  showTable = true,
-  onSubmitNuevo,
+  viewCard,
 }) {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
-  const abrirFormularioNuevo = () => {
-    setMostrarModal(true);
-  };
-
-  const handleSubmit = async (formData) => {
-    try {
-      setLoading(true);
-      const result = await onSubmitNuevo?.(formData);
-      if (result?.success) {
-        setSuccess(true);
-        setTimeout(() => {
-          setMostrarModal(false);
-          setSuccess(false);
-        }, 2000);
-      }
-    } catch (error) {
-      console.error("Error al guardar:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div id="filtersContainer" className="w-full p-2 border-gray-200">
@@ -63,29 +35,11 @@ export default function FiltrosBandeja({
 
         {/* Acciones visibles */}
         <AccionesBandeja
-          handleSearch={handleSearch}
-          setViewCard={setViewCard}
           viewCard={viewCard}
-          onCreateNew={abrirFormularioNuevo}
-          labelCreate={config.nuevoModal?.title}
-          showTable={showTable}
+          handleAcciones={handleAcciones}
+          labelCreate={config?.nuevoModal?.title}
         />
       </form>
-
-      {/* Modal dinámico */}
-      {config?.nuevoModal && (
-        <FormModal
-          options={config.options ?? []}
-          visible={mostrarModal}
-          onClose={() => setMostrarModal(false)}
-          title={config.nuevoModal?.title || "Registrar"}
-          fields={config.nuevoModal?.fields}
-          initialData={{}}
-          onSubmit={handleSubmit}
-          loading={loading}
-          success={success}
-        />
-      )}
     </div>
   );
 }

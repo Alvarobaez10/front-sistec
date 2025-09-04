@@ -1,9 +1,14 @@
 @import 'tailwindcss';
 
 
+@source inline("hidden block inline-block");
+
 /* === FLEX DISPLAY === */
 @source inline("{sm:,md:,lg:,xl:,2xl:,}flex");
 @source inline("{sm:,md:,lg:,xl:,2xl:,}inline-flex");
+
+@source inline("items-start items-center items-end items-stretch items-baseline");
+@source inline("justify-start justify-center justify-end justify-between justify-around justify-evenly");
 
 /* === FLEX DIRECTION === */
 @source inline("{sm:,md:,lg:,xl:,2xl:,}flex-row");

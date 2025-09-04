@@ -70,19 +70,29 @@ function GroupInput({
       html = <input type="checkbox" checked={value} className={config.className} {...others} />;
       break;
     case 'switch':
+      const { label, disabled, ...rest } = others;
       html = (
-        <label className="inline-flex items-center cursor-pointer">
+        <label className="inline-flex items-center cursor-pointer gap-3 text-[0.91rem]  ">
           <input
             type="checkbox"
             checked={value || false}
             className="sr-only"
             onChange={(e) => setValue?.(e.target.checked)}
-            disabled={config.disabled}
-            {...others}
+            disabled={disabled}
+            {...rest}
           />
-          <div className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${value ? 'bg-green-500' : 'bg-gray-300'}`}>
-            <div className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full shadow transition-transform duration-200 ${value ? 'translate-x-full' : 'translate-x-0'}`}></div>
+          <div
+            className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
+              value ? 'bg-accent' : 'bg-gray-300'
+            }`}
+          >
+            <div
+              className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full shadow transition-transform duration-200 ${
+                value ? 'translate-x-full' : 'translate-x-0'
+              }`}
+            ></div>
           </div>
+          {label}
         </label>
       );
       break;
