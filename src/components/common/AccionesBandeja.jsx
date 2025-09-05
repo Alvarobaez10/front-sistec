@@ -10,7 +10,7 @@ export default function AccionesBandeja({ handleAcciones, labelCreate, viewCard 
 
       {/* Acciones */}
       <div className="flex items-center gap-3 text-blue-600">
-        {!viewCard ? (
+        {/* {!viewCard ? (
           <button
             title="Vista cuadrícula"
             onClick={() => handleAcciones('vista')}
@@ -28,7 +28,7 @@ export default function AccionesBandeja({ handleAcciones, labelCreate, viewCard 
           >
             <Table size={20} />
           </button>
-        )}
+        )} */}
 
         <button
           title="Limpiar"

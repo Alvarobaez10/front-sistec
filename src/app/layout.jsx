@@ -1,6 +1,10 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import '../styles/globals.css';
 import '../styles/icons.css';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import '../styles/grid.css';
+
 import { NAME_APP } from '../config/env';
 import { AppProvider } from '@sistec/context/AppContext';
 import DivLoading from '@sistec/components/common/DivLoading';

@@ -1,16 +1,15 @@
 'use client';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import Table from './Table';
-import Cards from './Card';
-import FormModal from '@sistec/components/common/FormModal';
-import { useApp } from '@sistec/context/AppContext';
-import { el, id } from 'date-fns/locale';
-import validarObligatorios from '@sistec/helpers/validarObligatorios';
-import { toast } from 'react-toastify';
-import { putData } from '@sistec/services/common/gestionarInformacion';
+import '@sistec/styles/bandeja.css';
 import { showConfirm } from '@sistec/components/common/ConfirmToast';
+import FormModal from '@sistec/components/common/FormModal';
+import Pagination from '@sistec/components/common/paginationComponent/Pagination';
+import { useApp } from '@sistec/context/AppContext';
+import validarObligatorios from '@sistec/helpers/validarObligatorios';
+import { getData, putData } from '@sistec/services/common/gestionarInformacion';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import Table from './Table';
 
 const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBandeja'), {
   ssr: false,
@@ -18,13 +17,15 @@ const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBa
 
 export default function Bandeja({ config, codigoConfig }) {
   const { offLoad, onLoad, loading, getToken } = useApp();
+  const initialStateResultados = { data: [], meta: {} };
 
   const [filterData, setFilterData] = useState({});
-  const [data, setData] = useState([]);
   const [formData, setFormData] = useState({});
   const [viewCard, setViewCard] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [idEdition, setIdEdition] = useState(0);
+  const [resultados, setResultados] = useState(initialStateResultados);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setFormData({});
@@ -36,10 +37,13 @@ export default function Bandeja({ config, codigoConfig }) {
 
   function handleChangeFormData(info) {
     setFormData((prev) => ({ ...prev, ...info }));
+    const idTipoPersona = info?.id_dom_tipo_persona ? info?.id_dom_tipo_persona : '0';
+    validarTipoPersona(idTipoPersona);
+  }
 
+  function validarTipoPersona(idTipoPersona) {
     let fieldsHidden = [];
     let fieldsShow = [];
-    const idTipoPersona = info?.id_dom_tipo_persona ? info?.id_dom_tipo_persona : '0';
     if (String(idTipoPersona) === '2') {
       fieldsHidden = config.nuevoModal.fieldsNatural;
       fieldsShow = config.nuevoModal.fieldsJuridica;
@@ -66,6 +70,30 @@ export default function Bandeja({ config, codigoConfig }) {
     }
   }
 
+  async function handleSearch(page = 1, filters) {
+    try {
+      onLoad();
+      if (page !== currentPage) {
+        setCurrentPage(page);
+      }
+      const token = await getToken();
+      const jsonFilters = filters ?? filterData;
+      const response = await getData(
+        config.endpoint,
+        codigoConfig,
+        jsonFilters,
+        page,
+        config.limit,
+        token
+      );
+      setResultados(response);
+    } catch (e) {
+      console.error('Error al cargar los datos:', e);
+      toast.error('Error al cargar los datos. Por favor, intente nuevamente.');
+    }
+    offLoad();
+  }
+
   function handleAcciones(accion, item) {
     if (accion === 'nuevo') {
       setMostrarModal(true);
@@ -82,17 +110,15 @@ export default function Bandeja({ config, codigoConfig }) {
 
   function handleEdit(item) {
     setIdEdition(item.id_entidad);
+    const idTipoPersona = item?.id_dom_tipo_persona ? item?.id_dom_tipo_persona : '0';
+    validarTipoPersona(idTipoPersona);
     setFormData(item);
     setMostrarModal(true);
   }
 
-  async function handleSearch() {
-    //FALTA BUSCAR
-  }
-
   function limpiarCampos() {
-    setDatosForm({});
-    setData([]);
+    setFilterData({});
+    setResultados(initialStateResultados);
   }
 
   async function handleSubmit() {
@@ -129,10 +155,10 @@ export default function Bandeja({ config, codigoConfig }) {
       if (response && response.success) {
         if (idEdition && idEdition > 0) {
           toast.success('Información actualizada correctamente');
+          handleClose();
+          handleSearch(currentPage);
         } else {
           toast.success('Información registrada correctamente');
-          handleClose();
-          handleSearch();
         }
       }
     } catch (error) {
@@ -149,40 +175,59 @@ export default function Bandeja({ config, codigoConfig }) {
     setFormData({});
   }
 
+  function changePage(e) {
+    const page = Number(e.target.dataset.id);
+    setCurrentPage(page);
+    handleSearch(page);
+  }
+
   if (!config) return null;
 
   return (
-    <div className="w-full p-2">
+    <div className="w-full p-2" id="containerBandeja">
       {/* Filtros */}
-      <FiltrosBandeja
-        handleAcciones={handleAcciones}
-        config={config}
-        setFilters={setFilters}
-        dataFilters={filterData}
-        viewCard={viewCard}
-      />
+      <div id="bodyBandeja">
+        <FiltrosBandeja
+          handleAcciones={handleAcciones}
+          config={config}
+          setFilters={setFilters}
+          dataFilters={filterData}
+          viewCard={viewCard}
+        />
 
-      <FormModal
-        options={config.options ?? []}
-        visible={mostrarModal}
-        onClose={handleClose}
-        config={config.nuevoModal}
-        handleSubmit={handleSubmit}
-        loading={loading}
-        setFormData={handleChangeFormData}
-        formData={formData}
-        success={false}
-      />
+        <FormModal
+          options={config.options ?? []}
+          visible={mostrarModal}
+          onClose={handleClose}
+          config={config.nuevoModal}
+          handleSubmit={handleSubmit}
+          loading={loading}
+          setFormData={handleChangeFormData}
+          formData={formData}
+          success={false}
+        />
 
-      {/* Resultados (tabla o tarjetas) */}
-      <div className="p-4">
-        {loading ? (
-          <div className="text-center text-gray-500">Cargando datos...</div>
-        ) : viewCard ? (
-          <Cards data={data} config={config} />
-        ) : (
-          <Table config={config} data={data} onEdit={handleEdit} />
-        )}
+        {/* Resultados (tabla o tarjetas) */}
+        <div className="p-4" id="resultsContainer">
+          {
+            //  viewCard ? (
+            //   <Cards data={resultados} config={config} />
+            // ) : (
+            <div
+              key={'table'}
+              style={!viewCard ? {} : { display: 'none' }}
+              className="ag-theme-alpine content-grid"
+              id="contentgrid"
+            >
+              <Table config={config} resultados={resultados.data} handleAcciones={handleAcciones} />
+            </div>
+
+            // )
+          }
+        </div>
+      </div>
+      <div id="footerBandeja">
+        <Pagination meta={resultados?.meta} onclick={changePage}></Pagination>
       </div>
     </div>
   );

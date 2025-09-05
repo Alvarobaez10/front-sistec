@@ -1,0 +1,41 @@
+#containerBandeja {
+  display: grid;
+  grid-template-rows: 1fr 30px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "body"
+    "footer";
+  padding: 0px 1px;
+  height: 100vh;
+  & #bodyBandeja {
+    grid-area: body;
+    display: grid;
+    position: relative;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "filters"
+      "results";
+    padding: 0px 1px;
+    overflow: overlay;
+
+    & #filtersContainer {
+      grid-area: filters;
+      display: block;
+      padding: 0px 11px 3px 11px;
+    }
+
+    & #resultsContainer {
+      grid-area: results;
+      display: block;
+      overflow: auto;
+      overflow-x: hidden;
+    }
+  }
+
+  & #footerBandeja {
+    grid-area: footer;
+    display: block;
+    padding: 0px 11px;
+  }
+}
