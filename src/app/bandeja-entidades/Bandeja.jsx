@@ -6,22 +6,25 @@ import Table from './Table';
 import Cards from './Card';
 import FormModal from '@sistec/components/common/FormModal';
 import { useApp } from '@sistec/context/AppContext';
-import { el } from 'date-fns/locale';
+import { el, id } from 'date-fns/locale';
 import validarObligatorios from '@sistec/helpers/validarObligatorios';
 import { toast } from 'react-toastify';
+import { putData } from '@sistec/services/common/gestionarInformacion';
+import { showConfirm } from '@sistec/components/common/ConfirmToast';
 
 const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBandeja'), {
   ssr: false,
 });
 
-export default function Bandeja({ config }) {
-  const { offLoad, onLoad, loading } = useApp();
+export default function Bandeja({ config, codigoConfig }) {
+  const { offLoad, onLoad, loading, getToken } = useApp();
 
   const [filterData, setFilterData] = useState({});
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({});
   const [viewCard, setViewCard] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [idEdition, setIdEdition] = useState(0);
 
   useEffect(() => {
     setFormData({});
@@ -72,7 +75,15 @@ export default function Bandeja({ config }) {
       handleSearch();
     } else if (accion === 'vista') {
       setViewCard(!viewCard);
+    } else if (accion === 'editar') {
+      handleEdit(item);
     }
+  }
+
+  function handleEdit(item) {
+    setIdEdition(item.id_entidad);
+    setFormData(item);
+    setMostrarModal(true);
   }
 
   async function handleSearch() {
@@ -84,10 +95,6 @@ export default function Bandeja({ config }) {
     setData([]);
   }
 
-  function handleEdit(id, item) {
-    //FALTA EDITAR
-  }
-
   async function handleSubmit() {
     try {
       let mensaje = validarObligatorios({ fields: config.nuevoModal.fields }, formData);
@@ -95,13 +102,51 @@ export default function Bandeja({ config }) {
         toast.warning(mensaje);
         return;
       }
-      onLoad();
-      console.log('Guardar', formData);
+
+      const mensajeConfirm = idEdition
+        ? config.nuevoModal.mensajeConfirmacionActualizar
+        : config.nuevoModal.mensajeConfirmacionCrear;
+
+      showConfirm(
+        mensajeConfirm || '¿Está seguro de guardar los cambios?',
+        (confirmed) => {
+          if (confirmed) {
+            guardarInformacion();
+          }
+        },
+        'top-center'
+      );
     } catch (error) {
       console.error('Error al guardar:', error);
+    }
+  }
+
+  async function guardarInformacion() {
+    try {
+      onLoad();
+      const token = await getToken();
+      const response = await putData(config.endpoint, codigoConfig, idEdition, formData, token);
+      if (response && response.success) {
+        if (idEdition && idEdition > 0) {
+          toast.success('Información actualizada correctamente');
+        } else {
+          toast.success('Información registrada correctamente');
+          handleClose();
+          handleSearch();
+        }
+      }
+    } catch (error) {
+      console.error('Error al guardar:', error);
+      toast.error('Error al guardar la información. Por favor, intente nuevamente.');
     } finally {
       offLoad();
     }
+  }
+
+  function handleClose() {
+    setMostrarModal(false);
+    setIdEdition(0);
+    setFormData({});
   }
 
   if (!config) return null;
@@ -120,7 +165,7 @@ export default function Bandeja({ config }) {
       <FormModal
         options={config.options ?? []}
         visible={mostrarModal}
-        onClose={() => setMostrarModal(false)}
+        onClose={handleClose}
         config={config.nuevoModal}
         handleSubmit={handleSubmit}
         loading={loading}

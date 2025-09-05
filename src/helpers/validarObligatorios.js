@@ -33,7 +33,7 @@ export default function validarObligatorios(config, datos) {
       if(field.hidden) continue;
 
       if (
-        field.required &&
+        field.required && !field.hidden &&
         (!value || value === -1 || value === '-1' || JSON.stringify(value) === '[]')
       ) {
         mensaje = field['data-title-obligatorio']
