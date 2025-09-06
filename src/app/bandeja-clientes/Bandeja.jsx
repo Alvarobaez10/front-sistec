@@ -107,18 +107,19 @@ export default function Bandeja({ config, codigoConfig }) {
     } else if (accion === 'vista') {
       setViewCard(!viewCard);
     } else if (accion === 'editar') {
-      setTitleModal(config?.nuevoModal?.titleEdit);
+      setTitleModal(config?.nuevoModal?.titleEdit );
       handleEditView(item, true);
     } else if (accion === 'ver') {
-      setTitleModal(config?.nuevoModal?.titleView);
+      setTitleModal(config?.nuevoModal?.titleView );
       handleEditView(item, false);
     }
   }
+
   function handleEditView(item, isEdition) {
     if (isEdition) {
       setIdEdition(item.id_entidad);
     }
-    for (const field in config.nuevoModal.fields) {
+    for(const field in config.nuevoModal.fields){
       config.nuevoModal.fields[field].disabled = !isEdition;
     }
     const idTipoPersona = item?.id_dom_tipo_persona ? item?.id_dom_tipo_persona : '0';

@@ -11,8 +11,8 @@ export default function FormModal({
   formData,
   loading,
   config,
-  success = false,
   handleSubmit,
+  titleModal,
 }) {
   if (!visible) return null;
 
@@ -23,20 +23,13 @@ export default function FormModal({
       <div className="form-modal-container">
         <div className="form-modal">
           <div className="form-modal-header">
-            <h2 className="form-modal-title">{config.title ?? 'Formulario'}</h2>
+            <h2 className="form-modal-title">{titleModal ?? 'Formulario'}</h2>
             <button onClick={onClose} className="form-modal-close">
               ×
             </button>
           </div>
 
           <div className="form-modal-content">
-            {success && (
-              <div className="form-modal-success">
-                <div className="form-modal-success-title">Operación exitosa</div>
-                <div>Información almacenada de manera correcta</div>
-              </div>
-            )}
-
             <div className="grid grid-cols-2 gap-4 mb-4">
               <RenderForm
                 fields={config.fields}

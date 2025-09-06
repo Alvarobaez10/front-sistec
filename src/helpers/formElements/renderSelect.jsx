@@ -44,7 +44,9 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
     if (valueParent && valueParent !== -1) {
       options = options.filter((object) => String(object.id_parent) === String(valueParent));
     } else {
-      options = options.filter((object) => String(object.id_parent) === '-1');
+      options = options.filter(
+        (object) => String(object.id_parent) === '-1' || String(object.id_parent) === ''
+      );
     }
 
     if (options.length === 0) {
@@ -54,7 +56,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
     }
   }
 
-  disabled = disabled ?? isDisabled;
+  disabled = disabled ? disabled : isDisabled;
   let html = <></>;
 
   // SELECT NATIVO
