@@ -1,153 +1,84 @@
-import '@sistec/styles/grid.css';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import configGrid from '@sistec/helpers/configGrid';
+import { defaultColDef, textGrid } from '@sistec/helpers/grid/UtilsGrid';
+import { AgGridReact } from 'ag-grid-react';
+import { useEffect, useState } from 'react';
+import IconsAcciones from '@sistec/components/common/IconsAcciones';
 
-export default function Table({ data = [], config, onEdit }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = config?.limit || 6;
+export default function Table({ resultados, config, handleAcciones }) {
+  const [columnasGrid, setColumnasGrid] = useState([]);
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = data.slice(startIndex, endIndex);
+  const columnDefs = [];
 
-  const visibleColumns = config?.columnas?.filter(col => col.visible) || [];
+  function buttonTableOptions(params) {
+    const datos = params.data;
+    const html = [];
+    const acciones = typeof datos.acciones === 'string' ? JSON.parse(datos.acciones) : datos.acciones;
 
-  const handlePageChange = (page) => setCurrentPage(page);
-
-  const handleEdit = (item) => {
-    if (onEdit) onEdit(item[config?.campo_pk || 'id'], item);
-  };
-
-  const renderCellValue = (value) => (value === null || value === undefined || value === '' ? '-' : String(value));
-
-
-  function EstadoBadge({ value }) {
-    const isActive = ['Activo', 'ACTIVO'].includes(value);
-    return (
-      <span className={`cell-badge ${isActive ? 'badge-active' : 'badge-inactive'}`}>
-        {renderCellValue(value)}
-      </span>
-    );
-  }
-
-  function ActionsCell({ item }) {
-    if (item.acciones) {
-      const acciones = typeof item.acciones === 'string' ? JSON.parse(item.acciones) : item.acciones;
-      return (
-        <div className="table-actions">
-          {Object.entries(acciones).map(([key, accion]) => (
-            <button
-              key={key}
-              onClick={() => onEdit && onEdit(key, item[config?.campo_pk || 'id'], accion.form)}
-              className="btn-default"
-              title={accion.title || key}
-            >
-              {accion.title || key}
-            </button>
-          ))}
-        </div>
+    for (const accion in acciones) {
+      const item = acciones[accion];
+      html.push(
+        <button
+          className="text-blue-600 hover:text-blue-800 cursor-pointer"
+          type="button"
+          key={accion}
+          onClick={() => handleAcciones(accion, datos)}
+          title={item.title || accion}
+        >
+          <IconsAcciones accion={accion} />
+        </button>
       );
     }
-
     return (
-      <div className="table-actions">
-        <button
-          onClick={() => handleEdit(item)}
-          className="btn-default"
-          title="Editar registro"
-        >
-          Editar
-        </button>
-      </div>
+      <div className="flex flex-row gap-3 h-full flex justify-center items-center">{html}</div>
     );
   }
 
+  useEffect(() => {
+    let arrayColumnas;
+    const columnas = [...config.columnas];
+    if (columnas) {
+      arrayColumnas = [...columnDefs];
+      for (let i = 0; i < columnas.length; i++) {
+        const item = columnas[i];
+        const { visible, ...propsItem } = item;
+        if (visible) {
+          propsItem.minWidth = 100;
+          propsItem['resizable'] = true;
+          propsItem['cellRenderer'] = (params) => textGrid(params.data[item['field']]);
+          arrayColumnas.push({ ...propsItem });
+        }
+      }
+
+      arrayColumnas.push({
+        headerName: 'Acciones',
+        minWidth: 100,
+        field: 'id_contrato',
+        cellRenderer: (params) => buttonTableOptions(params),
+      });
+      setColumnasGrid([...arrayColumnas]);
+    }
+  }, [config]);
+
   return (
-    <div className="table-wrapper">
-      <div className="table-container">
-        <table className="table">
-          <thead className="table-head">
-            <tr>
-              {visibleColumns.map(column => (
-                <th key={column.field} className="table-head-cell">
-                  {column.headerName}
-                </th>
-              ))}
-              <th className="table-head-cell">Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody className="table-body">
-            {currentData.length === 0 ? (
-              <tr>
-                <td colSpan={visibleColumns.length + 1} className="no-results">
-                  Sin resultados para mostrar
-                </td>
-              </tr>
-            ) : (
-              currentData.map((item, index) => (
-                <tr key={item[config?.campo_pk || 'id'] || index} className="table-row">
-                  {visibleColumns.map(column => (
-                    <td key={column.field} className="table-cell">
-                      {column.field === 'estado' ? (
-                        <EstadoBadge value={item[column.field]} />
-                      ) : (
-                        <span title={renderCellValue(item[column.field])}>
-                          {renderCellValue(item[column.field])}
-                        </span>
-                      )}
-                    </td>
-                  ))}
-                  <td className="table-cell">
-                    <ActionsCell item={item} />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {totalPages > 1 && (
-        <div className="pagination-wrapper">
-          <div className="pagination-controls">
-            <button
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="pagination-btn"
-              title="Página anterior"
-            >
-              <ChevronLeft size={16} />
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`pagination-page ${currentPage === page ? 'active' : ''}`}
-              >
-                {page}
-              </button>
-            ))}
-
-            <button
-              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className="pagination-btn"
-              title="Página siguiente"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {data.length > 0 && (
-        <div className="pagination-info">
-          Mostrando {startIndex + 1} a {Math.min(endIndex, data.length)} de {data.length} registros
-        </div>
-      )}
-    </div>
+    <AgGridReact
+      key={'grid'}
+      gridOptions={{
+        ...configGrid(),
+        suppressCellFocus: true,
+        suppressRowHoverHighlight: true,
+        rowSelection: 'none',
+      }}
+      enableCellTextSelection={false}
+      columnDefs={[...columnasGrid]}
+      defaultColDef={defaultColDef}
+      rowData={resultados ?? []}
+      overlayNoRowsTemplate={
+        '<span class="mensaje-sin-resultados-grid">Sin resultados para mostrar</span>'
+      }
+      suppressCellSelection={true}
+      suppressCellFocus={false}
+      suppressColumnMoveAnimation={true}
+      className="ag-customgrid"
+    ></AgGridReact>
   );
 }

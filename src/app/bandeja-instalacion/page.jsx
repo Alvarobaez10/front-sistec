@@ -11,7 +11,7 @@ export default async function Page() {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <Bandeja config={configuracion} 
+      <Bandeja  codigoBandeja={codigo} config={configuracion} 
     />
     </Suspense>
   );

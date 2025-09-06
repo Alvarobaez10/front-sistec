@@ -97,7 +97,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
         isDisabled={disabled}
         isClearable
         isSearchable
-        value={options.find((o) => String(o.value) === String(value))}
+        value={options.find((o) => String(o.value) === String(value)) || null}
         options={options}
         {...otherConfig}
       />
