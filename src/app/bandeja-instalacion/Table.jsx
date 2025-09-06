@@ -34,30 +34,31 @@ export default function Table({ resultados, config, handleAcciones }) {
   }
 
   useEffect(() => {
-    let arrayColumnas;
     const columnas = [...config.columnas];
-    if (columnas) {
-      arrayColumnas = [...columnDefs];
-      for (let i = 0; i < columnas.length; i++) {
-        const item = columnas[i];
-        const { visible, ...propsItem } = item;
-        if (visible) {
-          propsItem.minWidth = 100;
-          propsItem['resizable'] = true;
-          propsItem['cellRenderer'] = (params) => textGrid(params.data[item['field']]);
-          arrayColumnas.push({ ...propsItem });
-        }
-      }
+    if (!columnas) return;
 
-      arrayColumnas.push({
-        headerName: 'Acciones',
+    const arrayColumnas = columnas
+      .filter(item => item.visible)
+      .map(item => ({
+        ...item,
         minWidth: 100,
-        field: 'id_contrato',
-        cellRenderer: (params) => buttonTableOptions(params),
-      });
-      setColumnasGrid([...arrayColumnas]);
-    }
+        resizable: true,
+        cellRenderer: (params) => {
+          const value = params.data[item.field];
+          return typeof value === 'boolean' ? (value ? 'Activo' : 'Inactivo') : textGrid(value);
+        },
+      }));
+
+    arrayColumnas.push({
+      headerName: 'Acciones',
+      minWidth: 100,
+      field: 'id_contrato',
+      cellRenderer: (params) => buttonTableOptions(params),
+    });
+
+    setColumnasGrid(arrayColumnas);
   }, [config]);
+
 
   return (
     <AgGridReact

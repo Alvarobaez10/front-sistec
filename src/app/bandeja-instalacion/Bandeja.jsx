@@ -36,7 +36,11 @@ export default function Bandeja({ codigoBandeja, config }) {
   }
 
   function handleChangeFormData(info) {
-    setFormData((prev) => ({ ...prev, ...info }));
+    if (typeof info === 'function') {
+      setFormData(info);
+    } else {
+      setFormData(prev => ({ ...prev, ...info }));
+    }
   }
 
   function handleAcciones(accion, item) {
@@ -58,7 +62,6 @@ export default function Bandeja({ codigoBandeja, config }) {
     setFormData(item);
     setMostrarModal(true);
   }
-
 
   async function handleSearch(page = 1, filters) {
     try {
@@ -83,7 +86,6 @@ export default function Bandeja({ codigoBandeja, config }) {
     }
     offLoad();
   }
-
 
   function limpiarCampos() {
     setFilterData({});
@@ -150,7 +152,6 @@ export default function Bandeja({ codigoBandeja, config }) {
     handleSearch(page);
   }
 
-
   if (!config) return null;
 
   return (
@@ -180,9 +181,6 @@ export default function Bandeja({ codigoBandeja, config }) {
         {/* Resultados (tabla o tarjetas) */}
         <div className="p-4" id="resultsContainer">
           {
-            //  viewCard ? (
-            //   <Cards data={resultados} config={config} />
-            // ) : (
             <div
               key={'table'}
               style={!viewCard ? {} : { display: 'none' }}
@@ -192,7 +190,6 @@ export default function Bandeja({ codigoBandeja, config }) {
               <Table config={config} resultados={resultados.data} handleAcciones={handleAcciones} />
             </div>
 
-            // )
           }
         </div>
       </div>
