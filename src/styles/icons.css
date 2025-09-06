@@ -19,3 +19,15 @@
 }
 
 
+.icon-agregar {
+  display: flex;
+  height: 15px;
+  width: 15px;
+  background-image: url('../assets/icons/iconAgregar.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+
+
