@@ -21,25 +21,4 @@ const Card = ({ material }) => {
   );
 };
 
-export const CardGrid = ({ materiales = [] }) => {
-  if (!materiales.length) {
-    return (
-      <div className="empty-state">
-        <p>No hay materiales disponibles</p>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      {materiales.map((material) => (
-        <Card
-          key={material.id_material}
-          material={material}
-        />
-      ))}
-    </div>
-  );
-};
-
 export default Card;

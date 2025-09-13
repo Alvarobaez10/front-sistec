@@ -157,6 +157,7 @@ export default function Bandeja({ config, codigoBandeja }) {
         setFormData={setFormData}
         formData={formData}
         success={false}
+        selectedTitle={formData.material}
       />
     </div>
   );

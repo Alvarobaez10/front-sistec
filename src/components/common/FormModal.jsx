@@ -12,6 +12,7 @@ export default function FormModal({
   config,
   success = false,
   handleSubmit,
+  selectedTitle,
 }) {
   if (!visible) return null;
 
@@ -54,7 +55,7 @@ export default function FormModal({
       <div className="form-modal-container">
         <div className="form-modal">
           <div className="form-modal-header">
-            <h2 className="form-modal-title">{config.title ?? 'Formulario'}</h2>
+            <h2 className="form-modal-title">{selectedTitle || config.title || 'Formulario'}</h2>
             <button onClick={onClose} className="form-modal-close">
               ×
             </button>
