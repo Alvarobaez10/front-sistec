@@ -162,3 +162,14 @@ div.ag-ltr .ag-header-viewport .ag-header-cell-resize::after {
   z-index: 1000;
   background: var(--bg-principal);
 }
+
+
+.ag-cell.ag-cell-editable:hover {
+  cursor: pointer;
+}
+
+.editable-cell:hover {
+  background-color: #f0f8ff; 
+  cursor: pointer;
+}
+

@@ -67,7 +67,7 @@ function GroupInput({
       html = renderRadio(config, className, options, value);
       break;
     case 'checkbox':
-      html = <input type="checkbox" checked={value} className={config.className} {...others} />;
+      html = <input type="checkbox" checked={!!value} className={config.className} {...others} />;
       break;
     case 'switch':
       const { label, disabled, ...rest } = others;

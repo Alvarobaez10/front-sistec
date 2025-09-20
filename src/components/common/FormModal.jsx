@@ -1,7 +1,6 @@
-import { useEffect, useState, Fragment } from 'react';
-import { createPortal } from 'react-dom';
 import RenderForm from '@sistec/components/common/RenderForm';
 import '@sistec/styles/form-modal.css';
+import RenderTable from './RenderTable';
 
 export default function FormModal({
   options,
@@ -12,9 +11,41 @@ export default function FormModal({
   loading,
   config,
   handleSubmit,
-  titleModal,
+  selectedTitle,
 }) {
   if (!visible) return null;
+
+  function handleAgregar() {
+    const key = config.table?.key || 'items';
+
+    const fila = Object.fromEntries(
+      (config.table.columnas || []).map((c) => {
+        switch (c.type) {
+          case 'switch':
+            return [c.field, true];      // check activo por defecto
+          case 'select':
+            return [c.field, null];      // select vacío
+          case 'text':
+          default:
+            return [c.field, ''];        // texto vacío
+        }
+      })
+    );
+
+
+    setFormData(prev => ({
+      ...prev,
+      [key]: prev?.[key] ? [...prev[key], fila] : [fila]
+    }));
+  }
+
+  function handleUpdate(updatedRows) {
+    const key = config.table.key;
+    setFormData((prev) => ({
+      ...prev,
+      [key]: updatedRows,
+    }));
+  }
 
   return (
     <div key={'formModal'}>
@@ -23,7 +54,7 @@ export default function FormModal({
       <div className="form-modal-container">
         <div className="form-modal">
           <div className="form-modal-header">
-            <h2 className="form-modal-title">{titleModal ?? 'Formulario'}</h2>
+            <h2 className="form-modal-title">{selectedTitle || config.title || 'Formulario'}</h2>
             <button onClick={onClose} className="form-modal-close">
               ×
             </button>
@@ -39,6 +70,22 @@ export default function FormModal({
                 origin="modal"
               />
             </div>
+
+
+            {config.table && (
+              <>
+                <div className="ag-theme-alpine content-grid" />
+                <RenderTable
+                  data={formData[config.table.key] || []}
+                  columnas={config.table.columnas || []}
+                  options={options}
+                  hasAction={!!config.table?.hasAction}
+                  onAgregar={handleAgregar}
+                  onUpdate={handleUpdate}
+                />
+              </>
+            )}
+
           </div>
 
           <div className="form-modal-buttons">
