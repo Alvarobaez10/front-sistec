@@ -55,9 +55,10 @@ export default function FormModal({
         <div className="form-modal">
           <div className="form-modal-header">
             <h2 className="form-modal-title">{selectedTitle || config.title || 'Formulario'}</h2>
-            <button onClick={onClose} className="form-modal-close">
+            {onClose && (<button onClick={onClose} className="form-modal-close">
               ×
             </button>
+            )}
           </div>
 
           <div className="form-modal-content">
@@ -89,9 +90,10 @@ export default function FormModal({
           </div>
 
           <div className="form-modal-buttons">
-            <button onClick={onClose} className="form-modal-cancel" disabled={loading}>
+            {onClose && (<button onClick={onClose} className="form-modal-cancel" disabled={loading}>
               Cancelar
             </button>
+            )}
             <button
               onClick={handleSubmit}
               className={`form-modal-save ${loading ? 'loading' : ''}`}
