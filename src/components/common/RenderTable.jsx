@@ -53,6 +53,7 @@ export default function RenderTable({
         editable: true,
         resizable: true,
         minWidth: 100,
+        onCellValueChanged: handleCellValueChanged,
       };
 
       if (col.type === "select") {
@@ -120,6 +121,7 @@ export default function RenderTable({
             ...configGrid(),
             rowSelection: "none",
             suppressRowHoverHighlight: false,
+            stopEditingWhenCellsLoseFocus: true,
           }}
           columnDefs={columnasGrid}
           defaultColDef={{ ...defaultColDef, editable: true, cellClass: 'editable-cell' }}

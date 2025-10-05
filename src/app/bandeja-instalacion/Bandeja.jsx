@@ -100,6 +100,20 @@ export default function Bandeja({ codigoBandeja, config }) {
         return;
       }
 
+        //  Validar materiales 
+    if (formData.materiales && Array.isArray(formData.materiales)) {
+      for (const [index, mat] of formData.materiales.entries()) {
+        if (!mat.id_material || mat.id_material === -1) {
+          toast.warning(`Debe seleccionar un material en la fila ${index + 1}`);
+          return;
+        }
+        if (!mat.id_unidad_medida || mat.id_unidad_medida === -1) {
+          toast.warning(`Debe seleccionar una unidad de medida en la fila ${index + 1}`);
+          return;
+        }
+      }
+    }
+
       const mensajeConfirm = idEdition
         ? config.nuevoModal.mensajeConfirmacionActualizar
         : config.nuevoModal.mensajeConfirmacionCrear;
