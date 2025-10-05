@@ -62,7 +62,7 @@ export default function FormModal({
           </div>
 
           <div className="form-modal-content">
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className={config.classNameContainerModal || "grid grid-cols-2 gap-4 mb-4"}>
               <RenderForm
                 fields={config.fields}
                 options={options}
