@@ -23,7 +23,9 @@ export const metadata = {
   title: NAME_APP,
   description: 'Aplicación de gestión de residuos sólidos',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.ico', // ✅ Ruta relativa desde /public o /app
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
 };
 

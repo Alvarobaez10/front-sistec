@@ -8,7 +8,7 @@
   cursor: pointer;
 }
 
-.menu-icon{
+.menu-icon {
   display: flex;
   height: 15px;
   width: 15px;
@@ -18,6 +18,15 @@
   cursor: pointer;
 }
 
+.icon-password-show {
+  background-image: url('../assets/icons/mostrar.svg');
+  background-size: contain;
+}
+
+.icon-password {
+  background-image: url('../assets/icons/no-mostrar.svg');
+  background-size: contain;
+}
 
 .icon-agregar {
   display: flex;
@@ -28,6 +37,3 @@
   background-repeat: no-repeat;
   cursor: pointer;
 }
-
-
-

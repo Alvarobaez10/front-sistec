@@ -81,17 +81,6 @@ export default function FormElementComponent(props) {
 
   const show = element.show !== undefined ? element.show : true;
 
-  if (element.type === 'ubicacion') {
-    return (
-      <Ubicacion
-        config={jsonConfigUbicacion}
-        data={datosForm}
-        setUbicacion={setUbicacion}
-        style={{ marginTop: '10px' }}
-      />
-    );
-  }
-
   return (
     <GroupInput
       {...element}

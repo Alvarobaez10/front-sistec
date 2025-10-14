@@ -17,6 +17,7 @@ const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBa
 
 export default function Bandeja({ config, codigoConfig }) {
   const { offLoad, onLoad, loading, getToken } = useApp();
+  useSessionValidator();
   const initialStateResultados = { data: [], meta: {} };
 
   const [filterData, setFilterData] = useState({});
@@ -218,7 +219,7 @@ export default function Bandeja({ config, codigoConfig }) {
           loading={loading}
           setFormData={handleChangeFormData}
           formData={formData}
-          titleModal={titleModal}
+          selectedTitle={titleModal}
         />
 
         {/* Resultados (tabla o tarjetas) */}

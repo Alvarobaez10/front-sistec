@@ -4,7 +4,7 @@ import { getMenu } from '@sistec/services/common/getMenu';
 import setLogOut from '@sistec/services/login/setLogOut';
 import validateSession from '@sistec/services/login/validateSession';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { createContext, useContext, useLayoutEffect, useState } from 'react';
+import { createContext, useContext, useLayoutEffect, useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,11 +16,12 @@ export const useApp = () => {
   return context;
 };
 
-
 export function AppProvider({ children }) {
   const router = useRouter();
   let pathname = usePathname();
   const { removeItem } = useStorage();
+  const iframesRef = useRef({});
+
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [loadedForms, setLoadedForms] = useState([]);
@@ -79,19 +80,23 @@ export function AppProvider({ children }) {
   }
 
   const returnLogin = () => {
-    router.push('/login');
+    if (window.location.pathname !== window.parent.location.pathname) {
+      window.parent.location.href = '/SAC/login';
+    } else {
+      router.push('/login');
+    }
   };
 
   async function logOut() {
     try {
       await setLogOut();
-      setIsLogged(false);
-      setLoadedForms([]);
-      removeItem('info-user', 'local');
-      returnLogin();
     } catch (error) {
       console.log(error);
     }
+     setIsLogged(false);
+     setLoadedForms([]);
+     removeItem('info-user', 'local');
+     returnLogin();
   }
 
   const offLoad = () => {
@@ -110,43 +115,41 @@ export function AppProvider({ children }) {
     }
   }
 
-function openForm(form) {
-  const copyLoadedForms = [...loadedForms];
-  const exists = copyLoadedForms.find(f => f.id_form === form.id_form);
+  function openForm(form) {
+    const copyLoadedForms = [...loadedForms];
+    const exists = copyLoadedForms.find((f) => f.id_form === form.id_form);
 
-  if (exists) {
-    copyLoadedForms.forEach(f => (f.visible = f.id_form === form.id_form));
-  } else {
-    copyLoadedForms.forEach(f => (f.visible = false));
-    copyLoadedForms.push({ ...form, visible: true });
+    if (exists) {
+      copyLoadedForms.forEach((f) => (f.visible = f.id_form === form.id_form));
+    } else {
+      copyLoadedForms.forEach((f) => (f.visible = false));
+      copyLoadedForms.push({ ...form, visible: true });
+    }
+    setLoadedForms(copyLoadedForms);
   }
-  setLoadedForms(copyLoadedForms);
-}
 
+  function changeForm(idForm) {
+    const copyLoadedForms = [...loadedForms];
+    copyLoadedForms.forEach((f) => (f.visible = f.id_form === idForm));
+    setLoadedForms(copyLoadedForms);
+  }
 
- function changeForm(idForm) {
-  const copyLoadedForms = [...loadedForms];
-  copyLoadedForms.forEach(f => (f.visible = f.id_form === idForm));
-  setLoadedForms(copyLoadedForms);
-}
+  const closeForm = (formId) => {
+    setLoadedForms((prev) => {
+      const filteredForms = prev.filter((form) => form.id_form !== formId);
 
- const closeForm = (formId) => {
-    setLoadedForms(prev => {
-      const filteredForms = prev.filter(form => form.id_form !== formId);
-      
-      const wasActive = prev.find(form => form.id_form === formId)?.visible;
-      
+      const wasActive = prev.find((form) => form.id_form === formId)?.visible;
+
       if (wasActive && filteredForms.length > 0) {
         return filteredForms.map((form, index) => ({
           ...form,
-          visible: index === filteredForms.length - 1
+          visible: index === filteredForms.length - 1,
         }));
       }
-      
+
       return filteredForms;
     });
   };
-
 
   return (
     <appContext.Provider
@@ -167,6 +170,7 @@ function openForm(form) {
         returnLogin,
         getToken,
         logOut,
+        iframesRef,
       }}
     >
       <ToastContainer />

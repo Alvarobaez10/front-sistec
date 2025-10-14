@@ -11,6 +11,8 @@ import formatNumberMoney, { preventValueMoney } from '@sistec/helpers/formatMone
 import renderHtmlDescription from '@sistec/helpers/formElements/renderHtmlDescription';
 import renderFile from '@sistec/helpers/formElements/renderFile';
 import { cn } from '@sistec/helpers/utils';
+import { useState } from 'react';
+import renderItemPassword from '@sistec/helpers/formElements/renderItemPassword';
 
 function GroupInput({
   show,
@@ -33,6 +35,7 @@ function GroupInput({
   rules,
   ...config
 }) {
+  const [showPassword, setShowPassword] = useState(false);
   if (valueMap) {
     value = get(valueMap, config.id);
   } else {
@@ -68,6 +71,9 @@ function GroupInput({
       break;
     case 'checkbox':
       html = <input type="checkbox" checked={!!value} className={config.className} {...others} />;
+      break;
+    case 'password':
+      html = renderItemPassword(config, className, value, showPassword, setShowPassword);
       break;
     case 'switch':
       const { label, disabled, ...rest } = others;
@@ -155,13 +161,13 @@ function GroupInput({
             {formatLabel === '%'
               ? `${value}%`
               : formatLabel === '$'
-                ? Number(value).toLocaleString('es-CO', {
+              ? Number(value).toLocaleString('es-CO', {
                   style: 'currency',
                   currency: 'COP',
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
                 })
-                : value}
+              : value}
           </span>
         </div>
       );

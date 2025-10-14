@@ -11,9 +11,11 @@ import Card from './Card';
 import Table from './Table';
 import '@sistec/styles/tabs.css';
 import '@sistec/styles/card.css';
+import useSessionValidator from '@sistec/hooks/useSessionValidator';
 
 export default function Bandeja({ config, codigoBandeja }) {
   const { offLoad, onLoad, loading, getToken } = useApp();
+  useSessionValidator();
   const [activeTab, setActiveTab] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalInstalacion, setMostrarModalInstalacion] = useState(true);

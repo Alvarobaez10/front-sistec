@@ -3,8 +3,7 @@ import { cn } from '@sistec/helpers/utils';
 import React, { useRef } from 'react';
 
 export default function ContainerForms() {
-  const iframesRef = useRef({});
-  const { loadedForms, changeForm, closeForm } = useApp();
+  const { loadedForms, changeForm, iframesRef, closeForm } = useApp();
 
   const handleCloseForm = (e, formId) => {
     e.preventDefault();

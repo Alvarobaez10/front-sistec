@@ -6,11 +6,13 @@ import useStorage from '@sistec/hooks/useStorage';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import '../../styles/header.css';
+import useSessionValidator from '@sistec/hooks/useSessionValidator';
 
 export default function Header() {
   const { logOut } = useApp();
   const { getItem } = useStorage();
   const [infoUser, setInfoUser] = useState({});
+  useSessionValidator(); 
 
   useEffect(() => {
     let data = getItem('infoUser', 'local');

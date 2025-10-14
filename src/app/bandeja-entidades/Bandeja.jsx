@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Table from './Table';
+import useSessionValidator from '@sistec/hooks/useSessionValidator';
 
 const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBandeja'), {
   ssr: false,
@@ -17,6 +18,7 @@ const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBa
 
 export default function Bandeja({ config, codigoConfig }) {
   const { offLoad, onLoad, loading, getToken } = useApp();
+  useSessionValidator();
   const initialStateResultados = { data: [], meta: {} };
 
   const [filterData, setFilterData] = useState({});
@@ -217,15 +219,12 @@ export default function Bandeja({ config, codigoConfig }) {
           loading={loading}
           setFormData={handleChangeFormData}
           formData={formData}
-          titleModal={titleModal}
+          selectedTitle={titleModal}
         />
 
         {/* Resultados (tabla o tarjetas) */}
         <div className="p-4" id="resultsContainer">
           {
-            //  viewCard ? (
-            //   <Cards data={resultados} config={config} />
-            // ) : (
             <div
               key={'table'}
               style={!viewCard ? {} : { display: 'none' }}
@@ -234,8 +233,6 @@ export default function Bandeja({ config, codigoConfig }) {
             >
               <Table config={config} resultados={resultados.data} handleAcciones={handleAcciones} />
             </div>
-
-            // )
           }
         </div>
       </div>

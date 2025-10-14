@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import '../../styles/login.css';
+import { cn } from '@sistec/helpers/utils';
 
 export default function Login() {
   const { onLoad, offLoad, loggedIn } = useApp();
@@ -15,6 +16,7 @@ export default function Login() {
   const [user, setUser] = useState('admin-sac');
   const [password, setPassword] = useState('12345*');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     offLoad();
@@ -95,14 +97,24 @@ export default function Login() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
-              <input
-                type="password"
-                required
-                placeholder="••••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 transition-all duration-200"
-              />
+              <div className="relative w-full">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  placeholder="••••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-4 pr-7 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 transition-all duration-200"
+                />
+                <div
+                  className={cn(
+                    'absolute top-1/2 right-2 -translate-y-1/2 bg-no-repeat bg-center cursor-pointer h-5 w-4',
+                    showPassword ? 'icon-password' : 'icon-password-show'
+                  )}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  title={showPassword ? 'Ocultar' : 'Mostrar'}
+                />
+              </div>
             </div>
 
             <button

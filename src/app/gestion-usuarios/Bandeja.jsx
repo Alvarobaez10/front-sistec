@@ -1,33 +1,35 @@
 'use client';
 import '@sistec/styles/bandeja.css';
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
-import Table from './Table';
+import { showConfirm } from '@sistec/components/common/ConfirmToast';
 import FormModal from '@sistec/components/common/FormModal';
 import Pagination from '@sistec/components/common/paginationComponent/Pagination';
 import { useApp } from '@sistec/context/AppContext';
 import validarObligatorios from '@sistec/helpers/validarObligatorios';
-import { toast } from 'react-toastify';
 import { getData, putData } from '@sistec/services/common/gestionarInformacion';
-import { showConfirm } from '@sistec/components/common/ConfirmToast';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import Table from './Table';
 import useSessionValidator from '@sistec/hooks/useSessionValidator';
-
 
 const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBandeja'), {
   ssr: false,
 });
 
-export default function Bandeja({ codigoBandeja, config }) {
+export default function Bandeja({ config, codigoConfig }) {
   const { offLoad, onLoad, loading, getToken } = useApp();
   useSessionValidator();
   const initialStateResultados = { data: [], meta: {} };
   const [filterData, setFilterData] = useState({});
-  const [resultados, setResultados] = useState(initialStateResultados);
-  const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({});
   const [viewCard, setViewCard] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [idEdition, setIdEdition] = useState(0);
+  const [titleModal, setTitleModal] = useState('');
+  const [configModal, setConfigModal] = useState(null);
+  const [resultados, setResultados] = useState(initialStateResultados);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [keyForm, setKeyForm] = useState(0);
 
   useEffect(() => {
     setFormData({});
@@ -38,31 +40,7 @@ export default function Bandeja({ codigoBandeja, config }) {
   }
 
   function handleChangeFormData(info) {
-    if (typeof info === 'function') {
-      setFormData(info);
-    } else {
-      setFormData(prev => ({ ...prev, ...info }));
-    }
-  }
-
-  function handleAcciones(accion, item) {
-    if (accion === 'nuevo') {
-      setMostrarModal(true);
-    } else if (accion === 'limpiar') {
-      limpiarCampos();
-    } else if (accion === 'buscar') {
-      handleSearch();
-    } else if (accion === 'vista') {
-      setViewCard(!viewCard);
-    } else if (accion === 'editar') {
-      handleEdit(item);
-    }
-  }
-
-  function handleEdit(item) {
-    setIdEdition(item.id_instalacion);
-    setFormData(item);
-    setMostrarModal(true);
+    setFormData((prev) => ({ ...prev, ...info }));
   }
 
   async function handleSearch(page = 1, filters) {
@@ -75,7 +53,7 @@ export default function Bandeja({ codigoBandeja, config }) {
       const jsonFilters = filters ?? filterData;
       const response = await getData(
         config.endpoint,
-        codigoBandeja,
+        codigoConfig,
         jsonFilters,
         page,
         config.limit,
@@ -89,32 +67,59 @@ export default function Bandeja({ codigoBandeja, config }) {
     offLoad();
   }
 
+  function handleAcciones(accion, item) {
+    if (accion === 'nuevo') {
+      setMostrarModal(true);
+      setTitleModal(config?.nuevoModal?.title);
+      setConfigModal({ ...config?.nuevoModal });
+    } else if (accion === 'limpiar') {
+      limpiarCampos();
+    } else if (accion === 'buscar') {
+      handleSearch();
+    } else if (accion === 'vista') {
+      setViewCard(!viewCard);
+    } else if (accion === 'editar') {
+      setTitleModal(config?.editarModalModal?.titleEdit);
+      handleEditView(item, true);
+      setConfigModal({ ...config?.editarModal });
+    } else if (accion === 'ver') {
+      setTitleModal(config?.nuevoModal?.titleView);
+      handleEditView(item, false);
+    }
+  }
+
+  function handleEditView(item, isEdition) {
+    if (isEdition) {
+      setIdEdition(item.id_usuario);
+    }
+    setFormData(item);
+    setMostrarModal(true);
+  }
+
   function limpiarCampos() {
     setFilterData({});
     setResultados(initialStateResultados);
+    setKeyForm((prev) => prev + 1);
   }
 
   async function handleSubmit() {
     try {
-      let mensaje = validarObligatorios({ fields: config.nuevoModal.fields }, formData);
-      if (mensaje) {
-        toast.warning(mensaje);
-        return;
+
+      let fields = JSON.parse(JSON.stringify(configModal.fields));
+
+      if(formData.id_usuario && formData['password']){
+        fields.password.required = true;
+        fields.confirmPassword.required = true;          
       }
 
-        //  Validar materiales 
-    if (formData.materiales && Array.isArray(formData.materiales)) {
-      for (const [index, mat] of formData.materiales.entries()) {
-        if (!mat.id_material || mat.id_material === -1) {
-          toast.warning(`Debe seleccionar un material en la fila ${index + 1}`);
-          return;
-        }
-        if (!mat.id_unidad_medida || mat.id_unidad_medida === -1) {
-          toast.warning(`Debe seleccionar una unidad de medida en la fila ${index + 1}`);
-          return;
-        }
+
+      let mensaje = validarObligatorios({ fields:fields, ...config }, formData);
+      if (mensaje) {
+        toast.warning(mensaje, {
+          style: { whiteSpace: 'pre-line' },
+        });
+        return;
       }
-    }
 
       const mensajeConfirm = idEdition
         ? config.nuevoModal.mensajeConfirmacionActualizar
@@ -138,19 +143,19 @@ export default function Bandeja({ codigoBandeja, config }) {
     try {
       onLoad();
       const token = await getToken();
-      const response = await putData(config.endpoint, codigoBandeja, idEdition, formData, token);
+      const response = await putData(config.endpoint, codigoConfig, idEdition, formData, token);
       if (response && response.success) {
         if (idEdition && idEdition > 0) {
-          toast.success('Información actualizada correctamente');
-        } else {
-          toast.success('Información registrada correctamente');
-          handleClose();
+          toast.success(response.message || 'Información actualizada correctamente');
           handleSearch(currentPage);
+        } else {
+          toast.success(response.message || 'Información creada correctamente');
         }
+        handleClose();
       }
     } catch (error) {
       console.error('Error al guardar:', error);
-      toast.error('Error al guardar la información. Por favor, intente nuevamente.');
+      toast.error(error.response?.message || 'Error al guardar la información');
     } finally {
       offLoad();
     }
@@ -175,6 +180,7 @@ export default function Bandeja({ codigoBandeja, config }) {
       {/* Filtros */}
       <div id="bodyBandeja">
         <FiltrosBandeja
+          key={keyForm}
           handleAcciones={handleAcciones}
           config={config}
           setFilters={setFilters}
@@ -186,27 +192,24 @@ export default function Bandeja({ codigoBandeja, config }) {
           options={config.options ?? []}
           visible={mostrarModal}
           onClose={handleClose}
-          config={config.nuevoModal}
+          config={configModal}
           handleSubmit={handleSubmit}
           loading={loading}
           setFormData={handleChangeFormData}
           formData={formData}
-          success={false}
+          selectedTitle={titleModal}
         />
 
         {/* Resultados (tabla o tarjetas) */}
         <div className="p-4" id="resultsContainer">
-          {
-            <div
-              key={'table'}
-              style={!viewCard ? {} : { display: 'none' }}
-              className="ag-theme-alpine content-grid"
-              id="contentgrid"
-            >
-              <Table config={config} resultados={resultados.data} handleAcciones={handleAcciones} />
-            </div>
-
-          }
+          <div
+            key={'table'}
+            style={!viewCard ? {} : { display: 'none' }}
+            className="ag-theme-alpine content-grid"
+            id="contentgrid"
+          >
+            <Table config={config} resultados={resultados.data} handleAcciones={handleAcciones} />
+          </div>
         </div>
       </div>
       <div id="footerBandeja">

@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 
 function renderInput(config, className = '', value, type, valueMap) {
-  const { idParent, idSon, action, trigger, ...otherConfig } = config;
+  const { idParent, idSon, action, trigger, noSpaces, ...otherConfig } = config;
   let { disabled } = config;
   let isDisabled = false;
   let key = otherConfig.id;
@@ -46,6 +46,9 @@ function renderInput(config, className = '', value, type, valueMap) {
       disabled={disabled}
       autoComplete="off"
       onInput={handlerOnInput}
+      onKeyDown={(e) => {
+        if (noSpaces && e.key === ' ') e.preventDefault();
+      }}
       value={value ?? ''}
       type={type}
     />
