@@ -189,8 +189,8 @@ export default function Bandeja({ config, codigoConfig }) {
     setFormData({});
   }
 
-  function changePage(e) {
-    const page = Number(e.target.dataset.id);
+  function changePage(idPage) {
+    const page = Number(idPage);
     setCurrentPage(page);
     handleSearch(page);
   }

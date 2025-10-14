@@ -27,22 +27,38 @@ export default function Pagination({
   if (meta.currentPage > 1) {
     btnAnterior = (
       <button
-        onClick={onclick}
-        data-id={meta.currentPage - 1}
-        title={'Anterior'}
-        className={'btn-pagination icon-prev'}
-      ></button>
+        onClick={() => onclick(meta.currentPage - 1)}
+        className="flex items-center justify-center w-6 h-6 rounded border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 cursor-pointer"
+        title="Anterior"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+      </button>
     );
   }
 
   if (meta.currentPage < meta.lastPage) {
     btnSiguiente = (
       <button
-        onClick={onclick}
-        data-id={meta.currentPage + 1}
-        title={'Siguiente'}
-        className={'btn-pagination icon-next'}
-      ></button>
+        onClick={() => onclick(meta.currentPage + 1)}
+        class="flex items-center justify-center w-6 h-6 rounded border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 cursor-pointer"
+        title="Siguiente"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          ></path>
+        </svg>
+      </button>
     );
   }
 
@@ -51,10 +67,14 @@ export default function Pagination({
   for (let i = paginaInicial; i <= paginaFinal; i++) {
     let activa = '';
     if (i === meta.currentPage) {
-      activa = 'page-active';
+      activa = '!bg-blue-500 text-white hover:bg-blue-600 cursor-default';
     }
     paginas.push(
-      <span onClick={onclick} data-id={i} key={i} className={`number-page ${activa}`}>
+      <span
+        onClick={() => onclick(i)}
+        key={i}
+        className={`flex items-center text-sm justify-center w-6 h-6 rounded border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 cursor-pointer ${activa}`}
+      >
         {i}
       </span>
     );
@@ -63,13 +83,15 @@ export default function Pagination({
   if (meta.total > 0) {
     return (
       <div className="footer-pagination">
-        <div className="div-pagination">
-          <span className="numPag">
+        <div className="div-pagination flex flex-row items-center">
+          <span className="mr-auto text-sm text-gray-700">
             {totalPagina} de {meta.total} {description}
           </span>
-          {btnAnterior}
-          {paginas.length > 1 ? paginas : []}
-          {btnSiguiente}
+          <div className="flex flex-row items-center gap-1">
+            {btnAnterior}
+            {paginas.length > 1 ? paginas : []}
+            {btnSiguiente}
+          </div>
         </div>
       </div>
     );
