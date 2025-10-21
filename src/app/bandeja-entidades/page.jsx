@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React, { Suspense } from "react";
 import Spinner from "@sistec/components/common/spinnerLoader/spinnerLoader";
 import { getPageJsonConfiguration } from "@sistec/services/common/getConfigurations";

@@ -18,15 +18,12 @@ RUN npm install --legacy-peer-deps
 # BUILDER
 FROM base AS builder
 
-ARG ENV_FILE
-
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 
 COPY . .
 
-RUN cp ${ENV_FILE} ./.env
 
 RUN npm run build
 
@@ -50,8 +47,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 #USER nextjs
 
-EXPOSE 3000
-
-ENV PORT=3000
+EXPOSE 3042
+    
+ENV PORT=3042
 
 CMD ["node", "server.js"]

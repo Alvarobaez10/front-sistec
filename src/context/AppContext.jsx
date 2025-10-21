@@ -4,7 +4,7 @@ import { getMenu } from '@sistec/services/common/getMenu';
 import setLogOut from '@sistec/services/login/setLogOut';
 import validateSession from '@sistec/services/login/validateSession';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { createContext, useContext, useLayoutEffect, useRef, useState } from 'react';
+import { createContext, useContext, useLayoutEffect, useRef, useState, Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,7 +16,8 @@ export const useApp = () => {
   return context;
 };
 
-export function AppProvider({ children }) {
+
+function AppProviderContent({ children }) {
   const router = useRouter();
   let pathname = usePathname();
   const { removeItem } = useStorage();
@@ -26,11 +27,13 @@ export function AppProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [loadedForms, setLoadedForms] = useState([]);
   const [user, setUserData] = useState();
+  
   const validateActive = () => {
     if (typeof window !== 'undefined') {
       return window.location.pathname;
     }
   };
+  
   const publicRoutes = ['/login', '/forgotpassword'];
   const isPublicRoute = publicRoutes.includes(pathname);
   const [isLogged, setIsLogged] = useState(false);
@@ -93,15 +96,16 @@ export function AppProvider({ children }) {
     } catch (error) {
       console.log(error);
     }
-     setIsLogged(false);
-     setLoadedForms([]);
-     removeItem('info-user', 'local');
-     returnLogin();
+    setIsLogged(false);
+    setLoadedForms([]);
+    removeItem('info-user', 'local');
+    returnLogin();
   }
 
   const offLoad = () => {
     setLoading(false);
   };
+  
   const onLoad = () => {
     setLoading(true);
   };
@@ -137,7 +141,6 @@ export function AppProvider({ children }) {
   const closeForm = (formId) => {
     setLoadedForms((prev) => {
       const filteredForms = prev.filter((form) => form.id_form !== formId);
-
       const wasActive = prev.find((form) => form.id_form === formId)?.visible;
 
       if (wasActive && filteredForms.length > 0) {
@@ -176,5 +179,14 @@ export function AppProvider({ children }) {
       <ToastContainer />
       {isPublicRoute || isLogged ? children : <></>}
     </appContext.Provider>
+  );
+}
+
+
+export function AppProvider({ children }) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AppProviderContent>{children}</AppProviderContent>
+    </Suspense>
   );
 }
