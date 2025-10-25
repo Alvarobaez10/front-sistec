@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Table from './Table';
+import useSessionValidator from '@sistec/hooks/useSessionValidator';
 
 const FiltrosBandeja = dynamic(() => import('@sistec/components/common/FiltrosBandeja'), {
   ssr: false,
