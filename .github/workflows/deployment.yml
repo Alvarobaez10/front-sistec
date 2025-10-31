@@ -1,0 +1,25 @@
+name: Deploy to VPS with Podman
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Obtener el código
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2️⃣ Autenticación al registry
+      - name: Login to Container Registry
+        run: |
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | podman login ${{ secrets.REGISTRY_HOST }} -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
+      # 3️⃣ Build & Push de la imagen
+      - name: Build and Push container
+        run: |
+          podman build -t ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_REPO }}:${{ github.sha }} .
+          podman push ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_REPO }}:${{ github.sha }}
