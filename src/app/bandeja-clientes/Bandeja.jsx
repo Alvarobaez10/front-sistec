@@ -32,7 +32,9 @@ export default function Bandeja({ config, codigoConfig }) {
   const [keyForm, setKeyForm] = useState(0);
 
   useEffect(() => {
-    setFormData({});
+    if (!mostrarModal) {
+      setFormData({});
+    }
   }, [mostrarModal]);
 
   function setFilters(info) {

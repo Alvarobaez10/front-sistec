@@ -24,6 +24,7 @@ COPY --from=deps /app/node_modules ./node_modules
 
 COPY . .
 
+RUN cp .env.prod ./.env
 
 RUN npm run build
 

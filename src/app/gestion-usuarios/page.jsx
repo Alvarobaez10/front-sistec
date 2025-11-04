@@ -4,16 +4,17 @@ import Spinner from "@sistec/components/common/spinnerLoader/spinnerLoader";
 import { getPageJsonConfiguration } from "@sistec/services/common/getConfigurations";
 import Bandeja from "./Bandeja";
 
-export default async function Page() {
-  
-  const codigo = "gestion-usuarios";
-  const origen = "bandeja";
-  const configuracion = await getPageJsonConfiguration(origen, codigo);
+export default async function Page({ searchParams }) {
+  const params = await searchParams;
+  const token = await params?.token;
+
+  const codigo = 'gestion-usuarios';
+  const origen = 'bandeja';
+  const configuracion = await getPageJsonConfiguration(origen, codigo, token);
 
   return (
     <Suspense fallback={<Spinner />}>
-      <Bandeja config={configuracion} codigoConfig={codigo} 
-    />
+      <Bandeja config={configuracion} codigoConfig={codigo} />
     </Suspense>
   );
 }

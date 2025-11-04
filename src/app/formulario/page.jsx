@@ -4,11 +4,12 @@ import Spinner from "@sistec/components/common/spinnerLoader/spinnerLoader";
 import { getPageJsonConfiguration } from "@sistec/services/common/getConfigurations";
 import Formulario from "./Formulario";
 
-export default async function Page() {
-  
-  const codigo = "med-formulario";
-  const origen = "formulario";
-  const configuracion = await getPageJsonConfiguration(origen, codigo);
+export default async function Page({ searchParams }) {
+  const params = await searchParams;
+  const token = await params?.token;
+  const codigo = 'med-formulario';
+  const origen = 'formulario';
+  const configuracion = await getPageJsonConfiguration(origen, codigo, token);
 
   return (
     <Suspense fallback={<Spinner />}>

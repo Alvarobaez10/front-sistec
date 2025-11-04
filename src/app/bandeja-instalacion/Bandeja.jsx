@@ -30,7 +30,9 @@ export default function Bandeja({ codigoBandeja, config }) {
   const [idEdition, setIdEdition] = useState(0);
 
   useEffect(() => {
-    setFormData({});
+    if (!mostrarModal) {
+      setFormData({});
+    }
   }, [mostrarModal]);
 
   function setFilters(info) {

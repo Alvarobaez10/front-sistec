@@ -32,7 +32,9 @@ export default function Bandeja({ config, codigoConfig }) {
   const [keyForm, setKeyForm] = useState(0);
 
   useEffect(() => {
-    setFormData({});
+    if (!mostrarModal) {
+      setFormData({});
+    }
   }, [mostrarModal]);
 
   function setFilters(info) {
@@ -117,9 +119,6 @@ export default function Bandeja({ config, codigoConfig }) {
     }
   }
   function handleEditView(item, isEdition) {
-    if (isEdition) {
-      setIdEdition(item.id_entidad);
-    }
     for (const field in config.nuevoModal.fields) {
       config.nuevoModal.fields[field].disabled = !isEdition;
     }
@@ -127,6 +126,9 @@ export default function Bandeja({ config, codigoConfig }) {
     validarTipoPersona(idTipoPersona);
     setFormData(item);
     setMostrarModal(true);
+    if (isEdition) {
+      setIdEdition(item.id_entidad);
+    }
   }
 
   function limpiarCampos() {
@@ -211,6 +213,7 @@ export default function Bandeja({ config, codigoConfig }) {
         />
 
         <FormModal
+          key={'formModal' + idEdition}
           options={config.options ?? []}
           visible={mostrarModal}
           onClose={handleClose}
