@@ -69,6 +69,20 @@ export default function RenderTable({
         }
       }
 
+      if (col.type === "text") {
+        colDef.valueFormatter = (params) => {
+          if (params.value == null || params.value === '') {
+            return 'Escribir';
+          }
+          return params.value;
+        };
+        
+        colDef.cellEditor = 'agTextCellEditor';
+        colDef.cellEditorParams = {
+          placeholder: 'Escribir'
+        };
+      }
+
       if (col.type === "switch") {
         colDef.cellRenderer = (params) => (
           <input
