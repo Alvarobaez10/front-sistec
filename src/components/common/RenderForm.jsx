@@ -15,7 +15,7 @@ function ListElements(props) {
 
   for (const key in fields) {
     const element = fields[key];
-    const uniqueKey = origin ? `${origin}-${key}` : key;  
+    const uniqueKey = origin ? `${origin}-${key}` : key;
 
     if (typeOptions.includes(element.type)) {
       if (!element.options || element.options.length === 0) {
@@ -47,7 +47,7 @@ function ListElements(props) {
       default:
         html.push(
           <FormElementComponent
-            key={uniqueKey}  
+            key={uniqueKey}
             element={element}
             setValue={setValue}
             id={key}
@@ -80,6 +80,12 @@ export default function RenderForm(props) {
   const setValue = (id, value) => {
     const newValueMap = { ...datosForm };
     set(newValueMap, id, value);
+
+    const field = fields[id];
+    if (field.idSon) {
+      const sons = field.idSon.split(',');
+      sons.map((son) => set(newValueMap, son, null));
+    }
 
     const validatedData = validateRulesForm(fields, origin, newValueMap, setConfig, options);
 

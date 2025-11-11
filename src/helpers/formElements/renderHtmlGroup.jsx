@@ -2,7 +2,7 @@ import { get } from "lodash";
 import renderInput from "./renderInput";
 import renderSelect from "./renderSelect";
 
-function renderHtmlGroup(config, className = "", options, valueMap) {
+function renderHtmlGroup(config, className = "", options, valueMap, setValue) {
   const fields = config.fields;
   const html = [];
 
@@ -17,14 +17,7 @@ function renderHtmlGroup(config, className = "", options, valueMap) {
     if (type === "select") {
       const optionsSelect = options.filter((item) => item.field === key);
       html.push(
-        renderSelect(
-          field,
-          field.className,
-          optionsSelect,
-          value,
-          field.mode,
-          valueMap,
-        ),
+        renderSelect(field, field.className, optionsSelect, value, field.mode, valueMap, setValue)
       );
     } else {
       html.push(renderInput(field, field.className, value, type, valueMap));
