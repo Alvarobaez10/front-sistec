@@ -32,6 +32,16 @@ const customStylesMulti = {
   multiValueRemove: () => 'cursor-pointer',
 };
 
+const menuScrollStyles = {
+  menuList: (base) => ({
+    ...base,
+    maxHeight: 200,     
+    overflowY: "auto", 
+  }),
+};
+
+
+
 function renderSelect(config, className = '', options, value, mode, valueMap) {
   const { id, idParent, idSon, action, ...otherConfig } = config;
   let { disabled } = config;
@@ -71,6 +81,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
       <select
         id={id}
         disabled={disabled}
+        styles={menuScrollStyles}
         {...otherConfig}
         value={String(value)}
         className={`w-full border border-gray-300 rounded-[5px] px-2 py-1 text-sm 
@@ -96,6 +107,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
         className={`react-select-container ${className}`}
         classNames={{ ...customStyles, ...customStylesSingle }}
         classNamePrefix="select-autocomplete"
+        styles={menuScrollStyles}
         isDisabled={disabled}
         isClearable
         isSearchable
@@ -118,6 +130,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
         className={`react-select-container`}
         classNamePrefix="select-multiple"
         isDisabled={disabled}
+        styles={menuScrollStyles}
         isClearable
         isSearchable
         isMulti
@@ -138,6 +151,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
         className={`react-select-container`}
         classNamePrefix="select-autocomplete"
         isDisabled={disabled}
+          styles={menuScrollStyles}
         isClearable
         isSearchable
         defaultOptions={options}
@@ -160,6 +174,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
         className={`react-select-container`}
         classNamePrefix="select-multiple"
         isDisabled={disabled}
+          styles={menuScrollStyles}
         isClearable
         isSearchable
         isMulti
