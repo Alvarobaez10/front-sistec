@@ -70,6 +70,7 @@ export default function Bandeja({ config, codigoBandeja }) {
     }));
 
     setMostrarModalInstalacion(false);
+    cargarMateriales();
   };
 
 
@@ -118,8 +119,7 @@ export default function Bandeja({ config, codigoBandeja }) {
     }
   };
 
-  useEffect(() => {
-    const fetchMateriales = async () => {
+ const cargarMateriales = async () => {
       try {
         const token = await getToken();
         if (!token) {
@@ -127,7 +127,7 @@ export default function Bandeja({ config, codigoBandeja }) {
           return;
         }
         onLoad();
-        const materialesItems = await getMateriales(token);
+        const materialesItems = await getMateriales(token , datosUsuario);
         const data = materialesItems?.data || [];
         setGrupos(data);
         if (data.length > 0) setActiveTab(data[0].id_grupo);
@@ -139,8 +139,6 @@ export default function Bandeja({ config, codigoBandeja }) {
       }
     };
 
-    fetchMateriales();
-  }, []);
 
   const activeGrupo = grupos.find((g) => g.id_grupo === activeTab);
 
