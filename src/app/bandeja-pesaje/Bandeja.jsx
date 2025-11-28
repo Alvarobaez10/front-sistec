@@ -28,7 +28,8 @@ export default function Bandeja({ config, codigoBandeja }) {
     id_instalacion: null,
     instalacion: null,
     operador: null,
-    id_vendedor: null
+    id_vendedor: null,
+    num_documento: null
   });
 
   if (!config) return null;
@@ -92,7 +93,8 @@ export default function Bandeja({ config, codigoBandeja }) {
       if (transaccion?.success && transaccion?.data?.success) {
         setDatosUsuario(prev => ({
           ...prev,
-          id_vendedor: transaccion?.data?.id_vendedor ?? null
+          id_vendedor: transaccion?.data?.id_vendedor ?? null,
+          num_documento: transaccion?.data?.num_documento ?? null
         }));
         toast.success("Transacción exitosa");
         setMostrarContenido(true);
@@ -114,6 +116,7 @@ export default function Bandeja({ config, codigoBandeja }) {
       materiales: resultados,
     };
 
+    console.log('Datos a guardar:', dataAGuardar);
     try {
       onLoad();
       const token = await getToken();
