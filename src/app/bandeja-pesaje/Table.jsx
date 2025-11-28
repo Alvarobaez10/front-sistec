@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 export default function Table({ resultados, config }) {
   const [columnasGrid, setColumnasGrid] = useState([]);
 
-
   useEffect(() => {
     const columnas = [...config.columnas];
     if (!columnas) return;
@@ -17,15 +16,28 @@ export default function Table({ resultados, config }) {
         ...item,
         minWidth: 100,
         resizable: true,
+
         cellRenderer: (params) => {
           const value = params.data[item.field];
-          return typeof value === 'boolean' ? (value ? 'Activo' : 'Inactivo') : textGrid(value);
+
+          if (typeof value === 'boolean') {
+            return value ? 'Activo' : 'Inactivo';
+          }
+
+          if (item.type === 'money') {
+            return new Intl.NumberFormat('es-CO', {
+              style: 'currency',
+              currency: 'COP',
+              minimumFractionDigits: 0,
+            }).format(value ?? 0);
+          }
+
+          return textGrid(value);
         },
       }));
 
     setColumnasGrid(arrayColumnas);
   }, [config]);
-
 
   return (
     <AgGridReact

@@ -45,7 +45,17 @@ export default function Bandeja({ config, codigoBandeja }) {
   const handleSubmit = async () => {
     try {
       onLoad();
-      setResultados(prev => [...prev, formData]);
+      const peso = Number(formData.peso ?? 0);
+      const valor = Number(formData.valor_unitario ?? 0);
+
+     const total = peso * valor;
+
+     const itemConTotal = {
+      ...formData,
+      total
+     };
+
+      setResultados(prev => [...prev, itemConTotal]);
       setMostrarModal(false);
     } catch (e) {
       console.error("Error guardando:", e);
@@ -141,6 +151,8 @@ export default function Bandeja({ config, codigoBandeja }) {
 
 
   const activeGrupo = grupos.find((g) => g.id_grupo === activeTab);
+  const totalGeneral = resultados.reduce((acc, item) => acc + (item.total ?? 0), 0);
+
 
   return (
     <div className="bandeja-container">
@@ -227,6 +239,11 @@ export default function Bandeja({ config, codigoBandeja }) {
                   {/* Tabla */}
                   <div className="w-1/2">
                     <Table config={config} resultados={resultados} />
+                      <div className="mt-4 text-left pr-4">
+                  <h2 className="text-xl font-bold">
+                    Total acumulado: {totalGeneral.toLocaleString("es-CO")}
+                  </h2>
+                </div>
                   </div>
                 </div>
               )}
