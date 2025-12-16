@@ -47,7 +47,7 @@ export default function Pagination({
     btnSiguiente = (
       <button
         onClick={() => onclick(meta.currentPage + 1)}
-        class="flex items-center justify-center w-6 h-6 rounded border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 cursor-pointer"
+        className="flex items-center justify-center w-6 h-6 rounded border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 cursor-pointer"
         title="Siguiente"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
