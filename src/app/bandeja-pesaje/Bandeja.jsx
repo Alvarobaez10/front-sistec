@@ -81,7 +81,6 @@ export default function Bandeja({ config, codigoBandeja }) {
     }));
 
     setMostrarModalInstalacion(false);
-    cargarMateriales();
   };
 
 
@@ -97,6 +96,7 @@ export default function Bandeja({ config, codigoBandeja }) {
           num_documento: transaccion?.data?.num_documento ?? null
         }));
         toast.success("Transacción exitosa");
+        await cargarMateriales();
         setMostrarContenido(true);
       } else {
         setMostrarContenido(false);
@@ -115,8 +115,7 @@ export default function Bandeja({ config, codigoBandeja }) {
       ...datosUsuario,
       materiales: resultados,
     };
-
-    console.log('Datos a guardar:', dataAGuardar);
+    
     try {
       onLoad();
       const token = await getToken();
@@ -152,24 +151,20 @@ export default function Bandeja({ config, codigoBandeja }) {
     }
   };
 
-  const resetBandeja = () => {
+  const resetPesaje = () => {
     setActiveTab(null);
     setMostrarModal(false);
-    setMostrarModalInstalacion(true);
     setMostrarContenido(false);
 
-    setFormData({});
     setFiltrosData({});
     setGrupos([]);
     setResultados([]);
 
-    setDatosUsuario({
-      id_instalacion: null,
-      instalacion: null,
-      operador: null,
+    setDatosUsuario(prev => ({
+      ...prev,
       id_vendedor: null,
       num_documento: null
-    });
+    }));
   };
 
 
@@ -275,7 +270,7 @@ export default function Bandeja({ config, codigoBandeja }) {
 
               <div className="flex justify-end mt-4 gap-2">
                  <button
-                    onClick={resetBandeja}
+                    onClick={resetPesaje}
                     className="btn-action btn-with-icon"
                   >
                     Nuevo pesaje
