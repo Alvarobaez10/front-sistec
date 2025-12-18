@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { putData} from '@sistec/services/common/gestionarInformacion';
+import { putData } from '@sistec/services/common/gestionarInformacion';
 import { toast } from 'react-toastify';
 import { useApp } from '@sistec/context/AppContext';
 import { getMateriales } from '@sistec/services/common/getMateriales';
@@ -49,12 +49,12 @@ export default function Bandeja({ config, codigoBandeja }) {
       const peso = Number(formData.peso ?? 0);
       const valor = Number(formData.valor_unitario ?? 0);
 
-     const total = peso * valor;
+      const total = peso * valor;
 
-     const itemConTotal = {
-      ...formData,
-      total
-     };
+      const itemConTotal = {
+        ...formData,
+        total
+      };
 
       setResultados(prev => [...prev, itemConTotal]);
       setMostrarModal(false);
@@ -120,7 +120,7 @@ export default function Bandeja({ config, codigoBandeja }) {
     try {
       onLoad();
       const token = await getToken();
-      const response = await putData(config.endpoint, codigoBandeja,  null , dataAGuardar, token);
+      const response = await putData(config.endpoint, codigoBandeja, null, dataAGuardar, token);
       if (response && response.success) {
         toast.success('Información registrada correctamente');
       }
@@ -132,25 +132,47 @@ export default function Bandeja({ config, codigoBandeja }) {
     }
   };
 
- const cargarMateriales = async () => {
-      try {
-        const token = await getToken();
-        if (!token) {
-          setGrupos([]);
-          return;
-        }
-        onLoad();
-        const materialesItems = await getMateriales(token , datosUsuario);
-        const data = materialesItems?.data || [];
-        setGrupos(data);
-        if (data.length > 0) setActiveTab(data[0].id_grupo);
-      } catch (error) {
-        console.error('Error cargando materiales:', error);
+  const cargarMateriales = async () => {
+    try {
+      const token = await getToken();
+      if (!token) {
         setGrupos([]);
-      } finally {
-        offLoad();
+        return;
       }
-    };
+      onLoad();
+      const materialesItems = await getMateriales(token, datosUsuario);
+      const data = materialesItems?.data || [];
+      setGrupos(data);
+      if (data.length > 0) setActiveTab(data[0].id_grupo);
+    } catch (error) {
+      console.error('Error cargando materiales:', error);
+      setGrupos([]);
+    } finally {
+      offLoad();
+    }
+  };
+
+  const resetBandeja = () => {
+    setActiveTab(null);
+    setMostrarModal(false);
+    setMostrarModalInstalacion(true);
+    setMostrarContenido(false);
+
+    setFormData({});
+    setFiltrosData({});
+    setGrupos([]);
+    setResultados([]);
+
+    setDatosUsuario({
+      id_instalacion: null,
+      instalacion: null,
+      operador: null,
+      id_vendedor: null,
+      num_documento: null
+    });
+  };
+
+
 
 
   const activeGrupo = grupos.find((g) => g.id_grupo === activeTab);
@@ -242,16 +264,23 @@ export default function Bandeja({ config, codigoBandeja }) {
                   {/* Tabla */}
                   <div className="w-1/2">
                     <Table config={config} resultados={resultados} />
-                      <div className="mt-4 text-left pr-4">
-                  <h2 className="text-xl font-bold">
-                    Total acumulado: {totalGeneral.toLocaleString("es-CO")}
-                  </h2>
-                </div>
+                    <div className="mt-4 text-left pr-4">
+                      <h2 className="text-xl font-bold">
+                        Total acumulado: {totalGeneral.toLocaleString("es-CO")}
+                      </h2>
+                    </div>
                   </div>
                 </div>
               )}
 
-              <div className="flex justify-end mt-4">
+              <div className="flex justify-end mt-4 gap-2">
+                 <button
+                    onClick={resetBandeja}
+                    className="btn-action btn-with-icon"
+                  >
+                    Nuevo pesaje
+                  </button>
+
                 <button
                   onClick={handleFinalizar}
                   className="btn-action btn-with-icon"
