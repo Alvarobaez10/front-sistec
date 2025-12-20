@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { putData } from '@sistec/services/common/gestionarInformacion';
 import { toast } from 'react-toastify';
 import { useApp } from '@sistec/context/AppContext';
@@ -24,46 +24,73 @@ export default function Bandeja({ config, codigoBandeja }) {
   const [filtrosData, setFiltrosData] = useState({});
   const [grupos, setGrupos] = useState([]);
   const [resultados, setResultados] = useState([]);
+  const [modalConfig, setModalConfig] = useState(null);
   const [datosUsuario, setDatosUsuario] = useState({
     id_instalacion: null,
     instalacion: null,
     operador: null,
     id_vendedor: null,
-    num_documento: null
+    id_reciclador: null,
+    operario: false,
+    asociado: false,
+    num_documento: null,
+    tipo: null,
+    nombre_completo: '',
+    rol_estado: '',
   });
 
   if (!config) return null;
 
+  const getRolKey = () => {
+    if (datosUsuario.operario) return 'operador_ruta';
+    if (datosUsuario.asociado) return 'reciclador_asociado';
+    return null;
+  };
+
+
   const openModal = (material = {}) => {
-    setFormData(material);
+    const rolKey = getRolKey();
+    const modalRol = config.nuevoModal?.byRole?.[rolKey];
+
+    if (!modalRol) {
+      toast.error('No existe configuración para este tipo de usuario');
+      return;
+    }
+
+    const initialData = {
+      ...material,
+      total: 0
+    };
+
+    setFormData(initialData);
+
+    setModalConfig({
+      title: modalRol.title,
+      fields: modalRol.fields
+    });
+
     setMostrarModal(true);
   };
+
 
   const closeModal = () => {
     setMostrarModal(false);
   };
 
-  const handleSubmit = async () => {
-    try {
-      onLoad();
-      const peso = Number(formData.peso ?? 0);
-      const valor = Number(formData.valor_unitario ?? 0);
+  const handleSubmit = () => {
+    const dataFinal = {
+      ...formData,
+      total: Number(formData.total ?? 0),
+      porcentaje: Number(formData.porcentaje ?? 0),
+      peso: Number(formData.peso ?? 0),
+      valor_unitario: Number(formData.valor_unitario ?? 0),
+      rechazo: Number(formData.rechazo ?? 0),
+    };
 
-      const total = peso * valor;
-
-      const itemConTotal = {
-        ...formData,
-        total
-      };
-
-      setResultados(prev => [...prev, itemConTotal]);
-      setMostrarModal(false);
-    } catch (e) {
-      console.error("Error guardando:", e);
-    } finally {
-      offLoad();
-    }
+    setResultados(prev => [...prev, dataFinal]);
+    setMostrarModal(false);
   };
+
 
   const handleSubmitInstalacion = () => {
     if (!datosUsuario.id_instalacion || !datosUsuario.operador) {
@@ -89,12 +116,20 @@ export default function Bandeja({ config, codigoBandeja }) {
       const token = await getToken();
       const transaccion = await getTransaccion(token, filtrosData);
 
-      if (transaccion?.success && transaccion?.data?.success) {
+      if (transaccion?.success) {
+        const data = transaccion.data;
         setDatosUsuario(prev => ({
           ...prev,
-          id_vendedor: transaccion?.data?.id_vendedor ?? null,
-          num_documento: transaccion?.data?.num_documento ?? null
+          id_vendedor: data.id_vendedor ?? null,
+          id_reciclador: data.id_reciclador ?? null,
+          operario: data.operario ?? false,
+          asociado: data.asociado ?? false,
+          num_documento: data.num_documento ?? null,
+          tipo: data.tipo ?? null,
+          nombre_completo: data.nombre_completo ?? '',
+          rol_estado: data.rol_estado ?? ''
         }));
+
         toast.success("Transacción exitosa");
         await cargarMateriales();
         setMostrarContenido(true);
@@ -115,10 +150,11 @@ export default function Bandeja({ config, codigoBandeja }) {
       ...datosUsuario,
       materiales: resultados,
     };
-    
+
     try {
       onLoad();
       const token = await getToken();
+
       const response = await putData(config.endpoint, codigoBandeja, null, dataAGuardar, token);
       if (response && response.success) {
         toast.success('Información registrada correctamente');
@@ -163,16 +199,37 @@ export default function Bandeja({ config, codigoBandeja }) {
     setDatosUsuario(prev => ({
       ...prev,
       id_vendedor: null,
-      num_documento: null
+      id_reciclador: null,
+      operario: false,
+      asociado: false,
+      num_documento: null,
+      tipo: null,
+      nombre_completo: '',
+      rol_estado: '',
     }));
   };
 
+  useEffect(() => {
+    const peso = Number(formData.peso ?? 0);
+    const valor = Number(formData.valor_unitario ?? 0);
+    const rechazo = Number(formData.rechazo ?? 0);
 
+    setFormData(prev => ({
+      ...prev,
+      total: peso * valor,
+      porcentaje: peso > 0
+        ? Number(((rechazo / peso) * 100).toFixed(2))
+        : 0
+    }));
+  }, [
+    formData.peso,
+    formData.valor_unitario,
+    formData.rechazo
+  ]);
 
 
   const activeGrupo = grupos.find((g) => g.id_grupo === activeTab);
-  const totalGeneral = resultados.reduce((acc, item) => acc + (item.total ?? 0), 0);
-
+  const totalGeneral = resultados.reduce((acc, item) => acc + Number(item.total ?? 0), 0);
 
   return (
     <div className="bandeja-container">
@@ -213,15 +270,25 @@ export default function Bandeja({ config, codigoBandeja }) {
 
                 {datosUsuario.instalacion && (
                   <span className="info-text">
-                    Instalación: <strong>{datosUsuario.instalacion}</strong>
+                    <strong> Instalación: </strong>  {datosUsuario.instalacion}
                   </span>
                 )}
                 {datosUsuario.operador && (
                   <span className="info-text">
-                    Operador: <strong>{datosUsuario.operador}</strong>
+                    <strong> Operador: </strong>{datosUsuario.operador}
                   </span>
                 )}
               </div>
+              {datosUsuario.nombre_completo && (
+                <div style={{ marginTop: '8px' }}>
+                  <div>
+                    <strong>{datosUsuario.tipo ?? ''}</strong> {datosUsuario.nombre_completo}
+                  </div>
+                  <div style={{ fontStyle: 'italic', color: '#555' }}>
+                    {datosUsuario.rol_estado}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -269,12 +336,12 @@ export default function Bandeja({ config, codigoBandeja }) {
               )}
 
               <div className="flex justify-end mt-4 gap-2">
-                 <button
-                    onClick={resetPesaje}
-                    className="btn-action btn-with-icon"
-                  >
-                    Nuevo pesaje
-                  </button>
+                <button
+                  onClick={resetPesaje}
+                  className="btn-action btn-with-icon"
+                >
+                  Nuevo pesaje
+                </button>
 
                 <button
                   onClick={handleFinalizar}
@@ -290,13 +357,17 @@ export default function Bandeja({ config, codigoBandeja }) {
             options={config.options ?? []}
             visible={mostrarModal}
             onClose={closeModal}
-            config={config.nuevoModal}
+            config={modalConfig}
+            selectedTitle={
+              modalConfig
+                ? `${formData.material} - ${modalConfig.title}`
+                : formData.material
+            }
             handleSubmit={handleSubmit}
             loading={loading}
             setFormData={setFormData}
             formData={formData}
             success={false}
-            selectedTitle={formData.material}
           />
         </>
       )}
