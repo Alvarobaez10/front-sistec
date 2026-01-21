@@ -32,14 +32,9 @@ const customStylesMulti = {
   multiValueRemove: () => 'cursor-pointer',
 };
 
-const menuScrollStyles = {
-  menuList: (base) => ({
-    ...base,
-    maxHeight: 200,     
-    overflowY: "auto", 
-  }),
+const customMenuScroll = {
+  menuList: () => 'max-h-[200px] overflow-y-auto',
 };
-
 
 
 function renderSelect(config, className = '', options, value, mode, valueMap) {
@@ -81,7 +76,6 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
       <select
         id={id}
         disabled={disabled}
-        styles={menuScrollStyles}
         {...otherConfig}
         value={String(value)}
         className={`w-full border border-gray-300 rounded-[5px] px-2 py-1 text-sm 
@@ -105,9 +99,8 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
       <Select
         noOptionsMessage={() => 'Sin resultados'}
         className={`react-select-container ${className}`}
-        classNames={{ ...customStyles, ...customStylesSingle }}
+        classNames={{ ...customStyles, ...customStylesSingle ,  ...customMenuScroll}}
         classNamePrefix="select-autocomplete"
-        styles={menuScrollStyles}
         isDisabled={disabled}
         isClearable
         isSearchable
@@ -126,11 +119,10 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
     html = (
       <Select
         noOptionsMessage={() => 'Sin resultados'}
-        classNames={{ ...customStyles, ...customStylesMulti }}
+        classNames={{ ...customStyles, ...customStylesMulti ,  ...customMenuScroll}}
         className={`react-select-container`}
         classNamePrefix="select-multiple"
         isDisabled={disabled}
-        styles={menuScrollStyles}
         isClearable
         isSearchable
         isMulti
@@ -147,11 +139,10 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
       <AsyncSelect
         noOptionsMessage={() => 'Sin resultados'}
         loadingMessage={() => 'Cargando...'}
-        classNames={{ ...customStyles, ...customStylesSingle }}
+        classNames={{ ...customStyles, ...customStylesSingle ,  ...customMenuScroll}}
         className={`react-select-container`}
         classNamePrefix="select-autocomplete"
         isDisabled={disabled}
-          styles={menuScrollStyles}
         isClearable
         isSearchable
         defaultOptions={options}
@@ -170,11 +161,10 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
       <AsyncSelect
         noOptionsMessage={() => 'Sin resultados'}
         loadingMessage={() => 'Cargando...'}
-        classNames={{ ...customStyles, ...customStylesMulti }}
+        classNames={{ ...customStyles, ...customStylesMulti ,  ...customMenuScroll}}
         className={`react-select-container`}
         classNamePrefix="select-multiple"
         isDisabled={disabled}
-          styles={menuScrollStyles}
         isClearable
         isSearchable
         isMulti
