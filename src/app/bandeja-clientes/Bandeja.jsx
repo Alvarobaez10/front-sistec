@@ -121,7 +121,7 @@ export default function Bandeja({ config, codigoConfig }) {
 
   function handleEditView(item, isEdition) {
     if (isEdition) {
-      setIdEdition(item.id_entidad);
+      setIdEdition(item.id_cliente);
     }
     for(const field in config.nuevoModal.fields){
       config.nuevoModal.fields[field].disabled = !isEdition;
