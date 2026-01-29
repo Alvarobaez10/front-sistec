@@ -30,7 +30,7 @@ export default function Menu() {
     <aside className="section-menu">
       <div className="logo-container">
         <div className="logo-image"></div>
-        <span className="brand-name">SAC</span>
+        <span className="brand-name">SISTEC</span>
       </div>
 
       <div className="menu-content">
