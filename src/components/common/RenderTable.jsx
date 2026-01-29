@@ -50,7 +50,7 @@ export default function RenderTable({
     const cols = columnas.map((col) => {
       const colDef = {
         ...col,
-        editable: true,
+        editable: col.disabled !== true,
         resizable: true,
         minWidth: 100,
         onCellValueChanged: handleCellValueChanged,
@@ -62,6 +62,10 @@ export default function RenderTable({
           colDef.cellEditor = "agSelectCellEditor";
           colDef.cellEditorParams = { values: [null, ...opts.map((o) => o.value)] };
           colDef.valueFormatter = (params) => {
+            if (col.disabled === true && (params.value == null || params.value === '')) {
+              return '';
+            }
+
             if (params.value == null) return "Seleccione";
             const found = opts.find((o) => o.value === params.value);
             return found ? found.label : params.value;
@@ -71,6 +75,11 @@ export default function RenderTable({
 
       if (col.type === "text") {
         colDef.valueFormatter = (params) => {
+          
+          if (col.disabled === true && (params.value == null || params.value === '')) {
+              return '';
+            }
+
           if (params.value == null || params.value === '') {
             return 'Escribir';
           }

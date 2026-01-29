@@ -39,13 +39,17 @@ export default function Bandeja({ codigoBandeja, config }) {
     setFilterData((prev) => ({ ...prev, ...info }));
   }
 
-  function handleChangeFormData(info) {
-    if (typeof info === 'function') {
-      setFormData(info);
-    } else {
-      setFormData(prev => ({ ...prev, ...info }));
-    }
-  }
+function handleChangeFormData(info) {
+  setFormData(prev => ({
+    ...prev,
+    ...info,
+    materiales: info.materiales?.map(fila => {
+      const option = config.options.find(o => o.field === 'id_material' && o.value === fila.id_material);
+      return { ...fila, grupo: option?.label_son || '' };
+    }) || prev.materiales
+  }));
+}
+
 
   function handleAcciones(accion, item) {
     if (accion === 'nuevo') {
