@@ -35,10 +35,10 @@ export default function Header() {
 
   return (
     <header className="section-header">
-      {/* <Image src={'/logo.png'} alt="SAC Logo" className="brand-image" width={100} height={40} /> */}
+      {/* <Image src={'/logo.png'} alt="SISTEC Logo" className="brand-image" width={100} height={40} /> */}
 
       <div>
-        {/* <h1 className="text-xl font-semibold">SAC - Sistema de asociaciones y compradores</h1>
+        {/* <h1 className="text-xl font-semibold">SISTEC - Sistema de asociaciones y compradores</h1>
         <a className="ayuda-app" href="#ayuda">
           Ayuda del sistema
         </a> */}

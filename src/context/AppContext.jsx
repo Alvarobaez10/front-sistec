@@ -84,7 +84,7 @@ function AppProviderContent({ children }) {
 
   const returnLogin = () => {
     if (window.location.pathname !== window.parent.location.pathname) {
-      window.parent.location.href = '/SAC/login';
+      window.parent.location.href = '/SISTEC/login';
     } else {
       router.push('/login');
     }

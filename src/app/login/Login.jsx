@@ -13,8 +13,8 @@ export default function Login() {
   const { onLoad, offLoad, loggedIn } = useApp();
   const { setItem } = useStorage();
   const router = useRouter();
-  const [user, setUser] = useState('admin-sac');
-  const [password, setPassword] = useState('12345*');
+  const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
