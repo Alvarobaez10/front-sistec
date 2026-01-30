@@ -23,9 +23,9 @@ export const metadata = {
   title: NAME_APP,
   description: 'Aplicación de gestión de residuos sólidos',
   icons: {
-    icon: '/SAC/apple-icon.png',  
-    shortcut: '/SAC/apple-icon.png',   
-    apple: '/SAC/apple-icon.png',
+    icon: '/SISTEC/apple-icon.png',  
+    shortcut: '/SISTEC/apple-icon.png',   
+    apple: '/SISTEC/apple-icon.png',
   },  
 };
 

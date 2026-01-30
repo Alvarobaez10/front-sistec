@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
-  basePath: '/SAC',
+  basePath: '/SISTEC',
   eslint: {
     ignoreDuringBuilds: true,
   },
