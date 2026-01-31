@@ -42,6 +42,37 @@ export default function Bandeja({ config, codigoConfig }) {
 
   function handleChangeFormData(info) {
     setFormData((prev) => ({ ...prev, ...info }));
+    const idTipoPersona = info?.id_dom_tipo_persona ? info?.id_dom_tipo_persona : '0';
+    validarTipoPersona(idTipoPersona);
+  }
+
+    function validarTipoPersona(idTipoPersona) {
+    let fieldsHidden = [];
+    let fieldsShow = [];
+    if (String(idTipoPersona) === '2') {
+      fieldsHidden = config.nuevoModal.fieldsNatural;
+      fieldsShow = config.nuevoModal.fieldsJuridica;
+    } else {
+      fieldsShow = config.nuevoModal.fieldsNatural;
+      fieldsHidden = config.nuevoModal.fieldsJuridica;
+    }
+
+    for (const keyField in config.nuevoModal.fields) {
+      if (fieldsHidden.includes(keyField)) {
+        if (!config.nuevoModal.fields[keyField].classContainer.includes('hidden')) {
+          config.nuevoModal.fields[keyField].classContainer += ' hidden';
+          config.nuevoModal.fields[keyField].hidden = true;
+        }
+      }
+      if (fieldsShow.includes(keyField)) {
+        if (config.nuevoModal.fields[keyField].classContainer.includes('hidden')) {
+          config.nuevoModal.fields[keyField].classContainer = config.nuevoModal.fields[
+            keyField
+          ].classContainer.replaceAll('hidden', '');
+          config.nuevoModal.fields[keyField].hidden = false;
+        }
+      }
+    }
   }
 
   async function handleSearch(page = 1, filters) {
@@ -94,6 +125,9 @@ export default function Bandeja({ config, codigoConfig }) {
     for(const field in config.nuevoModal.fields){
       config.nuevoModal.fields[field].disabled = !isEdition;
     }
+
+    const idTipoPersona = item?.id_dom_tipo_persona ? item?.id_dom_tipo_persona : '0';
+    validarTipoPersona(idTipoPersona);
 
     setFormData(item);
     setMostrarModal(true);

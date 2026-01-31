@@ -33,19 +33,27 @@ export default function FormModal({
     );
 
 
-    setFormData(prev => ({
-      ...prev,
-      [key]: prev?.[key] ? [...prev[key], fila] : [fila]
-    }));
+  const nuevosDatos = {
+    ...formData,
+    [key]: formData?.[key] ? [...formData[key], fila] : [fila]
+  };
+
+  setFormData(nuevosDatos);
   }
 
-  function handleUpdate(updatedRows) {
-    const key = config.table.key;
-    setFormData((prev) => ({
-      ...prev,
-      [key]: updatedRows,
-    }));
-  }
+
+
+function handleUpdate(updatedRows) {
+  const key = config.table.key;
+
+  const nuevosDatos = {
+    ...formData,
+    [key]: updatedRows
+  };
+
+  setFormData(nuevosDatos);
+}
+
 
   return (
     <div key={'formModal'}>
