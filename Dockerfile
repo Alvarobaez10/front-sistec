@@ -1,6 +1,6 @@
 #DEPENDENCIAS
 # Usar versión específica de Node.js Alpine para seguridad y reproducibilidad
-FROM node:20.11.1-alpine3.19 AS base
+FROM node:24-alpine AS base 
 
 FROM base AS deps
 
@@ -19,7 +19,7 @@ COPY package.json package-lock.json* ./
 
 # Verificar integridad de paquetes con package-lock.json
 # --ignore-scripts previene ejecución de scripts maliciosos en post-install
-RUN npm ci --ignore-scripts --audit --legacy-peer-deps
+RUN npm ci --ignore-scripts
 
 # Eliminar git y herramientas innecesarias para reducir superficie de ataque
 RUN apk del git && \

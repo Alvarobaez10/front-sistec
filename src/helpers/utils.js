@@ -17,7 +17,7 @@ export function getValueSelect(event, mode) {
   if (mode === 'single') {
     valueSelect = event.target.value;
   } else if (mode === 'autocomplete' || mode === 'async') {
-    valueSelect = event ? event.value : null;
+    valueSelect = event ? event : null;
   } else if (mode === 'multi') {
     valueSelect = event.map((item) => item.value);
   }

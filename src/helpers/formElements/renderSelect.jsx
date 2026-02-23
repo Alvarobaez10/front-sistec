@@ -1,41 +1,76 @@
+import { ComboBox } from '@sistec/components/common/ComboBox';
 import { get } from 'lodash';
-import Select from 'react-select';
-import AsyncSelect from 'react-select/async';
+import dynamic from 'next/dynamic';
+import { cn } from '../utils';
+const Select = dynamic(() => import('react-select'), { ssr: false });
+const AsyncSelect = dynamic(() => import('react-select/async'), { ssr: false });
 
 const customStyles = {
-  option: ({ isFocused, isSelected }) =>
-    `px-2 py-1 !cursor-pointer !text-sm ${
-      isSelected
-        ? '!bg-[var(--accent)] !text-[var(--white-color-label)]'
-        : isFocused
-        ? 'bg-blue-100'
-        : 'bg-white'
-    }`,
-  menu: () => 'mt-1 rounded-md border border-gray-200 bg-white shadow-md',
-  singleValue: () => 'text-gray-800',
-  clearIndicator: () => 'cursor-pointer [&>svg]:w-4 [&>svg]:h-4',
-  dropdownIndicator: () => 'cursor-pointer [&>svg]:w-4 [&>svg]:h-4',
+  control: (base, state) => ({
+    ...base,
+    minHeight: '35px',
+    height: '35px',
+    boxShadow: 'none',
+    borderColor: state.isFocused ? '#93c5fd' : '#d1d5db',
+    '&:hover': {
+      borderColor: state.isFocused ? '#93c5fd' : '#d1d5db',
+    },
+  }),
+  valueContainer: (base) => ({
+    ...base,
+    height: '35px',
+    padding: '0 8px',
+  }),
+  input: (base) => ({
+    ...base,
+    margin: '0px',
+  }),
+  indicatorsContainer: (base) => ({
+    ...base,
+    height: '35px',
+  }),
+  indicatorSeparator: () => ({
+    display: 'none',
+  }),
+  menu: (base) => ({
+    ...base,
+    marginTop: '4px',
+    borderRadius: '6px',
+    border: '1px solid #e5e7eb',
+  }),
+  menuList: (base) => ({
+    ...base,
+    maxHeight: '200px',
+    padding: '4px',
+  }),
+  option: (base, state) => ({
+    ...base,
+    fontSize: '14px',
+    cursor: 'pointer',
+    backgroundColor: state.isSelected ? 'var(--accent)' : state.isFocused ? '#dbeafe' : 'white',
+    color: state.isSelected ? 'var(--white-color-label)' : '#1f2937',
+    '&:active': {
+      backgroundColor: state.isSelected ? 'var(--accent)' : '#dbeafe',
+    },
+  }),
+  singleValue: (base) => ({
+    ...base,
+    color: '#1f2937',
+    fontSize: '14px',
+  }),
+  multiValue: (base) => ({
+    ...base,
+    backgroundColor: '#dbeafe',
+  }),
+  multiValueLabel: (base) => ({
+    ...base,
+    fontSize: '14px',
+  }),
+  placeholder: (base) => ({
+    ...base,
+    fontSize: '14px',
+  }),
 };
-const customStylesSingle = {
-  control: ({ isFocused }) =>
-    `w-full border rounded-[5px] p-0 text-sm  shadow-none h-[35px] !min-h-[35px]
-           ${isFocused ? '!border-gray-300 ring-1 ring-blue-300' : 'border-gray-300'}
-           disabled:bg-gray-100 disabled:cursor-not-allowed`,
-  indicatorsContainer: () => 'h-full',
-};
-const customStylesMulti = {
-  control: ({ isFocused }) =>
-    `w-full border rounded-[5px] p-0 text-sm  !shadow-none !min-h-[35px]
-           ${isFocused ? '!border-gray-300 ring-1 ring-blue-300' : 'border-gray-300'}
-           disabled:bg-gray-100 disabled:cursor-not-allowed`,
-  multiValue: () => '!bg-blue-100',
-  multiValueRemove: () => 'cursor-pointer',
-};
-
-const customMenuScroll = {
-  menuList: () => 'max-h-[200px] overflow-y-auto',
-};
-
 
 function renderSelect(config, className = '', options, value, mode, valueMap) {
   const { id, idParent, idSon, action, ...otherConfig } = config;
@@ -96,18 +131,31 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
   // SELECT AUTOCOMPLETE
   else if (mode === 'autocomplete') {
     html = (
-      <Select
-        noOptionsMessage={() => 'Sin resultados'}
-        className={`react-select-container ${className}`}
-        classNames={{ ...customStyles, ...customStylesSingle ,  ...customMenuScroll}}
-        classNamePrefix="select-autocomplete"
-        isDisabled={disabled}
-        isClearable
-        isSearchable
-        value={options.find((o) => String(o.value) === String(value)) || null}
+      <ComboBox
+        allOptions={options}
+        className={cn('form-select', otherConfig.className)}
+        clearable={true}
+        creatable={false}
+        disabled={disabled}
+        id={id}
+        labelNotFound={otherConfig.labelNotFound ?? 'Sin resultados'}
+        labelSearch={otherConfig.labelSearch ?? 'Buscar...'}
         options={options}
-        {...otherConfig}
+        placeholder={otherConfig.placeholder ?? 'Seleccionar'}
+        setOptions={() => {}}
+        value={value}
+        onChange={otherConfig.onChange}
       />
+
+      // <Select
+      //   noOptionsMessage={() => 'Sin resultados'}
+      //   isDisabled={disabled}
+      //   isClearable
+      //   isSearchable
+      //   value={options.find((o) => String(o.value) === String(value)) || null}
+      //   options={options}
+      //   {...otherConfig}
+      // />
     );
   }
 
@@ -119,9 +167,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
     html = (
       <Select
         noOptionsMessage={() => 'Sin resultados'}
-        classNames={{ ...customStyles, ...customStylesMulti ,  ...customMenuScroll}}
-        className={`react-select-container`}
-        classNamePrefix="select-multiple"
+        styles={customStyles}
         isDisabled={disabled}
         isClearable
         isSearchable
@@ -139,9 +185,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
       <AsyncSelect
         noOptionsMessage={() => 'Sin resultados'}
         loadingMessage={() => 'Cargando...'}
-        classNames={{ ...customStyles, ...customStylesSingle ,  ...customMenuScroll}}
-        className={`react-select-container`}
-        classNamePrefix="select-autocomplete"
+        styles={customStyles}
         isDisabled={disabled}
         isClearable
         isSearchable
@@ -161,9 +205,7 @@ function renderSelect(config, className = '', options, value, mode, valueMap) {
       <AsyncSelect
         noOptionsMessage={() => 'Sin resultados'}
         loadingMessage={() => 'Cargando...'}
-        classNames={{ ...customStyles, ...customStylesMulti ,  ...customMenuScroll}}
-        className={`react-select-container`}
-        classNamePrefix="select-multiple"
+        styles={customStyles}
         isDisabled={disabled}
         isClearable
         isSearchable
